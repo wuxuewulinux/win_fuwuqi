@@ -99,6 +99,9 @@
     <ClInclude Include="tinyxml.hpp">
       <Filter>config</Filter>
     </ClInclude>
+    <ClInclude Include="DecorateBagManager.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BagHandler.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="tinyxmlerror.cpp">
       <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="DecorateBagManager.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

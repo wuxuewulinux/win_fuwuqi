@@ -28,6 +28,9 @@ if (a == NULL)\
 }\
 
 
+
+#define TIMESTAMP  get_time()/1000			//获取当前时间，返回的是秒为单位
+
 struct shuji
 {
 
