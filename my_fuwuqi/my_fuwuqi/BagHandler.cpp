@@ -104,7 +104,7 @@ int CBagHandler::OnClientMsg(const CSMsg& rCSMsg, int iFd)
 			iRet = OnFetchReq(rCSMsg, iFd);
 		}
 		break;
-	case CSBagCmd_Use:
+	case CSBagCmd_Use:					//先保留该物品使用按钮功能，需要时在封装他
 		{
 			iRet = OnUseReq(rCSMsg, iFd);
 		}

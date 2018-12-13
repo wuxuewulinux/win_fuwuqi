@@ -115,3 +115,44 @@ int CBagManager::DelGrid( uint32_t uiItemId )
 	return 0;
 
 }
+
+
+
+int CBagManager::AddItem(uint32_t uiItemId, uint32_t uiNum)
+{
+	//先查找人物身上是否有该物品
+	TDBBagGrid * pBagItem =  GetGridByID(uiItemId);
+	if (pBagItem)
+	{
+		//不为空证明人物已经存在该物品ID了,在原有基础上增加物品
+		pBagItem->m_uiNum += uiNum;
+	}
+	else	//人物之前没存在该物品，就要给他增加物品ID到人物身上
+	{
+		AddGrid(uiItemId,uiNum);
+	}
+	return 0;
+}
+
+
+int CBagManager::DelItem(uint32_t uiItemId, uint32_t uiNum)
+{
+	TDBBagGrid * pBagItem =  GetGridByID(uiItemId);
+	//判断自身的数量减去要扣除的数量，如果为0，就要把ID从人物去除掉
+	if ((pBagItem->m_uiNum - uiNum) == 0)
+	{
+		DelGrid(uiItemId);				//从人物身上去除物品
+	}
+	else								
+	{
+		pBagItem->m_uiNum = pBagItem->m_uiNum - uiNum;
+	}
+	return 0;
+}
+
+
+int CBagManager::GetItemNum(uint32_t uiItemId)
+{
+	TDBBagGrid * pBagItem =  GetGridByID(uiItemId);
+	return pBagItem->m_uiNum;
+}
