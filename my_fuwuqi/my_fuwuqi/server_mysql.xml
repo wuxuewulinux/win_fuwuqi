@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="gb2312"?>
+<root>
+
+  <server>
+    <data>
+      <ip>192.168.146.129</ip>
+      <port>5050</port>
+    </data>
+  </server>
+	
+	<mysqlserver>
+		<data>
+			<ip>192.168.146.129</ip>
+			<port>5060</port>
+		</data>
+	</mysqlserver>
+	
+  <mysql>
+    <data>
+      <mysql_user>root</mysql_user>
+      <mysql_mima>123456</mysql_mima>
+      <mysql_database>wokao</mysql_database>
+    </data>
+  </mysql>
+
+  <mysqltable>
+    <data>
+      <table>ZhangHu</table>
+    </data>
+    <data>
+      <table>renwu</table>
+    </data>
+    <data>
+      <table>shuxin</table>
+    </data>
+  </mysqltable>
+  
+</root>

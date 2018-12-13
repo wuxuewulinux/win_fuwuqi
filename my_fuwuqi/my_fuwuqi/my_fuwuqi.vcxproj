@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BagHandler.hpp" />
+    <ClInclude Include="BagManager.hpp" />
+    <ClInclude Include="BagWork.hpp" />
+    <ClInclude Include="DataStore.hpp" />
+    <ClInclude Include="enterfunction.hpp" />
+    <ClInclude Include="epoll_ku.hpp" />
+    <ClInclude Include="errornum.hpp" />
+    <ClInclude Include="Handler.hpp" />
+    <ClInclude Include="HandlerList.hpp" />
+    <ClInclude Include="logicconfigmanager.hpp" />
+    <ClInclude Include="lognamespace.hpp" />
+    <ClInclude Include="mingchengconfig.hpp" />
+    <ClInclude Include="pthreadstart.hpp" />
+    <ClInclude Include="quanju.hpp" />
+    <ClInclude Include="readn.hpp" />
+    <ClInclude Include="RegisterLoginHandler.hpp" />
+    <ClInclude Include="RegisterLoginWork.hpp" />
+    <ClInclude Include="RoleObj.hpp" />
+    <ClInclude Include="sendclient.hpp" />
+    <ClInclude Include="serverconfig.hpp" />
+    <ClInclude Include="SocketDBClient.hpp" />
+    <ClInclude Include="socketku.hpp" />
+    <ClInclude Include="timeku.hpp" />
+    <ClInclude Include="tinystr.hpp" />
+    <ClInclude Include="tinyxml.hpp" />
+    <ClInclude Include="txtlog.hpp" />
+    <ClInclude Include="type.h" />
+    <ClInclude Include="UpdateData.hpp" />
+    <ClInclude Include="xmlnodeconfig.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BagHandler.cpp" />
+    <ClCompile Include="BagManager.cpp" />
+    <ClCompile Include="BagWork.cpp" />
+    <ClCompile Include="DataStore.cpp" />
+    <ClCompile Include="enterfunction.cpp" />
+    <ClCompile Include="epoll_ku.cpp" />
+    <ClCompile Include="gateway.cpp" />
+    <ClCompile Include="Handler.cpp" />
+    <ClCompile Include="HandlerList.cpp" />
+    <ClCompile Include="logicconfigmanager.cpp" />
+    <ClCompile Include="lognamespace.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mingchengconfig.cpp" />
+    <ClCompile Include="pthreadstart.cpp" />
+    <ClCompile Include="quanju.cpp" />
+    <ClCompile Include="readn.cpp" />
+    <ClCompile Include="RegisterLoginHandler.cpp" />
+    <ClCompile Include="RegisterLoginWork.cpp" />
+    <ClCompile Include="RoleObj.cpp" />
+    <ClCompile Include="sendclient.cpp" />
+    <ClCompile Include="serverconfig.cpp" />
+    <ClCompile Include="SocketDBClient.cpp" />
+    <ClCompile Include="socketku.cpp" />
+    <ClCompile Include="timeku.cpp" />
+    <ClCompile Include="tinystr.cpp" />
+    <ClCompile Include="tinyxml.cpp" />
+    <ClCompile Include="tinyxmlerror.cpp" />
+    <ClCompile Include="txtlog.cpp" />
+    <ClCompile Include="UpdateData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="mingcheng.xml" />
+    <Xml Include="server_mysql.xml" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{58DD9595-D7D7-48A6-9280-43663F06C62C}</ProjectGuid>
+    <RootNamespace>my_fuwuqi</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<root>
+  
+  <name>
+    <data>
+      <grade>1</grade>
+      <shengchang>50</shengchang>
+      <mingcheng>富豪</mingcheng>
+    </data>
+    <data>
+      <grade>2</grade>
+      <shengchang>150</shengchang>
+      <mingcheng>赌王</mingcheng>
+    </data>
+   <data>
+      <grade>3</grade>
+      <shengchang>300</shengchang>
+      <mingcheng>赌圣</mingcheng>
+    </data>
+    <data>
+    <grade>4</grade>
+    <shengchang>400</shengchang>
+    <mingcheng>赌神</mingcheng>
+    </data>
+  </name>
+  
+</root>
