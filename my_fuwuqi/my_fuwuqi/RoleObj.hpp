@@ -6,6 +6,7 @@
 #include "../proto/DBmsg.pb.h"
 #include <string>
 #include "BagManager.hpp"
+#include "DecorateBagManager.hpp"
 
 class CRoleObj
 {
@@ -45,6 +46,7 @@ public:
 public:
 
 	CBagManager & GetBagMgr(){ return m_oBagMgr; }
+	DecorateBagManager & GetDecorateBagMgr(){return m_oDecorateBagMgr;}
 
 private:
 
@@ -65,6 +67,7 @@ private:
 	//添加各个模块的类对象在这里
 
 	CBagManager	m_oBagMgr;									//背包模块
+	DecorateBagManager m_oDecorateBagMgr;					//装饰背包模块
 };
 
 #endif

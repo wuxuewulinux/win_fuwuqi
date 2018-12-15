@@ -94,7 +94,13 @@ int CBagHandler::OnClientMsg(const CSMsg& rCSMsg, int iFd)
 {
 	int iRet = -1;
 	iRet = OnCheckCSMsg(rCSMsg, CS_MSGID_BAG);
-	HANDCHECH_I(iRet,-1);
+	if (iRet < 0)
+	{
+		//日志输出
+		printf("CBagHandler CheckCSMsg : %d",iRet);
+		MYLOG.sprintf(BUFF,"RegisterLoginHandler CheckCSMsg : %d",iRet);
+		return -1;
+	}
 
 	const CSBagReq &req = rCSMsg.body().bagreq();
 	switch (req.cmd())
@@ -112,8 +118,14 @@ int CBagHandler::OnClientMsg(const CSMsg& rCSMsg, int iFd)
 	default:
 		iRet = -1;
 	}
-	
-	return iRet;	
+	if (iRet < 0)
+	{
+		//判断功能逻辑是否正确，不可能会出现负数，出现负数的原因可能是指针为空，或者数据发生错误
+		printf("CBagHandler OnClientMsg error : %d",iRet);
+		MYLOG.sprintf(BUFF,"CBagHandler OnClientMsg error : %d",iRet);
+	}
+
+	return 0;	
 }
 
 int CBagHandler::OnServerMsg(const SSMsg& rSSMsg)
@@ -131,9 +143,12 @@ int CBagHandler::OnFetchReq(const CSMsg& rCSMsg, int iFd)
 	HANDCHECH_P(pFetchRsp, -2);
 
 	CSBagBagInfo* pCSBagInfo = pFetchRsp->mutable_baginfo();
-	CBagFramework::GenCSBagInfo( pRoleObj, *pCSBagInfo );
-
-	SendClient(iFd,&oCSMsg);
+	int iRet = CBagFramework::GenCSBagInfo( pRoleObj, *pCSBagInfo );
+	if (iRet == 0)
+	{
+		SendClient(iFd,&oCSMsg);
+	}
+	
 	return 0;
 }
 

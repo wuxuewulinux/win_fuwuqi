@@ -40,14 +40,20 @@ struct shuji
 
 };
 
+
+struct MessageBody
+{
+	unsigned short length;                         //该数据的长度
+
+	char buff[1024];
+};
+
 struct sendshuji     //序列化数据然后保存到线程队列中在发送给客户端
 {
 
 	int io;
-
-	int length;                         //该数据的长度
-
-	char buff[255];
+	int len;
+	struct MessageBody rMessageBody;
 
 };
 

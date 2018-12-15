@@ -12,9 +12,13 @@
 
 //ST2PB表示把数据存到数据库的操作，PB2ST表示从数据库取数据出来
 
-//背包模块保存的数据
+//////////////////////////////////////////////////////////////背包模块保存的数据////////////////////////////////////////////////////
 
-const int DB_MAX_BAG_GRID_NUM = 100;			//最多只有100种物品
+const int DB_MAX_BAG_GRID_NUM = 100;			//最多只有100种物品id
+
+const int DB_MAX_DECORATE_BAG = 30;				//最多的装饰背包种类只有30种
+
+const int DB_MAX_DECORATE_BAG_NUM = 100;		//每个种类的装饰背包的ID最多有 100种装饰id
 
 typedef struct tagDBBagGrid
 {
@@ -44,7 +48,61 @@ typedef struct tagDBBagInfo
 } TDBBagInfo;
 
 
-//背包模块保存的数据
+//////////////////////////////////////////////////////////////////////背包模块保存的数据/////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////装饰背包模块保存的数据/////////////////////////////////////////////////
+
+typedef struct tagDBDecorateItem
+{
+	uint32_t m_uiID;		
+	uint32_t m_uiType; 
+	uint64_t m_uiEndTime;
+
+	int ST2PB(DBDecorateItem& msg);
+	int PB2ST(const DBDecorateItem& msg);
+	static int Compare(const void* p1, const void* p2);
+} TDBDecorateItem;
+
+typedef struct tagDBDecorateItemList
+{
+	int16_t m_nGridsRef;											// 真正存在的ID的总数
+	TDBDecorateItem m_astDecorateGrids[DB_MAX_DECORATE_BAG_NUM];	// 最大存放的个数最大为100个装饰ID
+
+	int ST2PB(DBDecorateItemList& msg);
+	int PB2ST(const DBDecorateItemList& msg);
+} TDBDecorateItemList;
+
+typedef struct tagDBDecorateBagInfo
+{
+	TDBDecorateItemList m_stBagGridList; // CridList
+
+	int ST2PB(DBDecorateBagInfo& msg);
+	int PB2ST(const DBDecorateBagInfo& msg);
+} TDBDecorateBagInfo;
+
+typedef struct tagDBDecorateBagInfoList
+{
+	int16_t m_nGridsRef;											// 真正存在的装饰背包类型的总数
+	TDBDecorateBagInfo m_astDecorateBagList[DB_MAX_DECORATE_BAG];	// 最大装饰背包类型个数最大为30个装饰不同种类的背包
+
+	int ST2PB(DBDecorateBagInfoList& msg);
+	int PB2ST(const DBDecorateBagInfoList& msg);
+} TDBDecorateBagInfoList;
+
+
+typedef struct tagDBDecorateBagModuleInfo
+{
+	TDBDecorateBagInfoList m_stDecorateBagInfoList; // CridList
+
+	int ST2PB(DBDecorateBagModuleInfo& msg);
+	int PB2ST(const DBDecorateBagModuleInfo& msg);
+} TDBDecorateBagModuleInfo;
+
+
+
+//////////////////////////////////////////////////////////////////////装饰背包模块保存的数据/////////////////////////////////////////////////
 
 
 #endif // !_DATASTORE_HPP_

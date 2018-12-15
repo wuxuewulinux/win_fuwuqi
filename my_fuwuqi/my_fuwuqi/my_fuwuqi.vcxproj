@@ -15,7 +15,9 @@
     <ClInclude Include="BagManager.hpp" />
     <ClInclude Include="BagWork.hpp" />
     <ClInclude Include="DataStore.hpp" />
+    <ClInclude Include="DecorateBagHandler.hpp" />
     <ClInclude Include="DecorateBagManager.hpp" />
+    <ClInclude Include="DecorateBagWork.hpp" />
     <ClInclude Include="enterfunction.hpp" />
     <ClInclude Include="epoll_ku.hpp" />
     <ClInclude Include="errornum.hpp" />
@@ -47,7 +49,9 @@
     <ClCompile Include="BagManager.cpp" />
     <ClCompile Include="BagWork.cpp" />
     <ClCompile Include="DataStore.cpp" />
+    <ClCompile Include="DecorateBagHandler.cpp" />
     <ClCompile Include="DecorateBagManager.cpp" />
+    <ClCompile Include="DecorateBagWork.cpp" />
     <ClCompile Include="enterfunction.cpp" />
     <ClCompile Include="epoll_ku.cpp" />
     <ClCompile Include="gateway.cpp" />

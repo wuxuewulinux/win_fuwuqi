@@ -4,6 +4,7 @@
 #include "Handler.hpp"
 #include "RegisterLoginHandler.hpp"
 #include "BagHandler.hpp"
+#include "DecorateBagHandler.hpp"
 
 #define HANDLERLIST CHandlerList::Instance()
 
@@ -34,6 +35,7 @@ private:
 	
 	static RegisterLoginHandler m_oRegisterLoginHandler;					//µÇÂ½×¢²áÄ£¿éhandler
 	static CBagHandler m_oBagHandler;										//±³°üÄ£¿éhandler
+	static DecorateBagHandler m_oDecorateBagHandler;						//×°ÊÎ±³°ühandler
 
 };
 

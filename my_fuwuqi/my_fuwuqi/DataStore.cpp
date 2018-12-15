@@ -3,48 +3,9 @@
 
 
 //定义所有模块结构体的PB2ST 和 ST2PB函数
-/*
-int tagDBTreasureInfo::ST2PB(DBTreasureInfo& msg)
-{
-	DBTreasureList* treasurelist = msg.mutable_treasurelist();
-	m_stTreasureList.ST2PB(*treasurelist);
-	msg.set_lastfreetime(m_uiLastFreeTime);
-	msg.set_lastastrologytime(m_uiLastAstrologyTime);
-	msg.set_dailyastrologytimes(m_uiDailyAstrologyTimes);
-	msg.set_totalastrologytimes(m_uiTotalAstrologyTimes);
-	msg.set_haddrop200(m_ucHadDrop200);
-	return 0;
-}
 
-int tagDBTreasureInfo::PB2ST(const DBTreasureInfo& msg)
-{
-	m_stTreasureList.PB2ST(msg.treasurelist());
-	if (msg.has_lastfreetime())
-	{
-		m_uiLastFreeTime = msg.lastfreetime();
-	}
-	if (msg.has_lastastrologytime())
-	{
-		m_uiLastAstrologyTime = msg.lastastrologytime();
-	}
-	if (msg.has_dailyastrologytimes())
-	{
-		m_uiDailyAstrologyTimes = msg.dailyastrologytimes();
-	}
-	if (msg.has_totalastrologytimes())
-	{
-		m_uiTotalAstrologyTimes = msg.totalastrologytimes();
-	}
-	if (msg.has_haddrop200())
-	{
-		m_ucHadDrop200 = msg.haddrop200();
-	}
-	return 0;
-}
 
-*/
-
-//背包模块保存的数据
+/////////////////////////////////背包模块保存的数据///////////////////////////////////////////////////////
 
 int tagDBBagGrid::ST2PB(DBBagGrid& msg)
 {
@@ -106,4 +67,116 @@ int tagDBBagInfo::PB2ST(const DBBagInfo& msg)
 	return 0;
 }
 
-//背包模块保存的数据
+/////////////////////////////////背包模块保存的数据/////////////////////////////////////////////////////
+
+
+
+////////////////////////////////装饰背包模块保存的数据/////////////////////////////////////////////////
+
+int tagDBDecorateItem::Compare(const void* p1, const void* p2)
+{
+	return ((const tagDBDecorateItem*)p1)->m_uiID - ((const tagDBDecorateItem*)p2)->m_uiID;
+}
+
+int tagDBDecorateItem::ST2PB(DBDecorateItem& msg)
+{
+	msg.set_id(m_uiID);
+	msg.set_type(m_uiType);
+	msg.set_endtime(m_uiEndTime);
+
+	return 0;
+}
+
+
+int tagDBDecorateItem::PB2ST(const DBDecorateItem& msg)
+{
+	if (msg.has_id())
+	{
+		m_uiID = msg.id();
+	}
+	if (msg.has_type())
+	{
+		m_uiType = msg.type();
+	}
+	if (msg.has_endtime())
+	{
+		m_uiEndTime = msg.endtime();
+	}
+
+	return 0;
+}
+
+
+int tagDBDecorateItemList::ST2PB(DBDecorateItemList& msg)
+{
+	for (int i = 0; i < m_nGridsRef && i < DB_MAX_DECORATE_BAG_NUM; ++i)
+	{
+		DBDecorateItem* sub = msg.add_decorategrids();
+		m_astDecorateGrids[i].ST2PB(*sub);
+	}
+
+	return 0;
+}
+int tagDBDecorateItemList::PB2ST(const DBDecorateItemList& msg)
+{
+	m_nGridsRef = msg.decorategrids_size();
+	for (int i = 0; i < m_nGridsRef && i < DB_MAX_DECORATE_BAG_NUM ; ++i)
+	{
+		m_astDecorateGrids[i].PB2ST(msg.decorategrids(i));
+	}
+	m_nGridsRef = m_nGridsRef <=  DB_MAX_DECORATE_BAG_NUM ? m_nGridsRef : DB_MAX_DECORATE_BAG_NUM;
+
+	return 0;
+}
+
+
+int tagDBDecorateBagInfo::ST2PB(DBDecorateBagInfo& msg)
+{
+	DBDecorateItemList* baggridlist = msg.mutable_baggridlist();
+	m_stBagGridList.ST2PB(*baggridlist);
+
+	return 0;
+}
+int tagDBDecorateBagInfo::PB2ST(const DBDecorateBagInfo& msg)
+{
+	m_stBagGridList.PB2ST(msg.baggridlist());
+	return 0;
+}
+
+int tagDBDecorateBagInfoList::ST2PB(DBDecorateBagInfoList& msg)
+{
+	for (int i = 0; i < DB_MAX_DECORATE_BAG; ++i)
+	{
+		DBDecorateBagInfo* sub = msg.add_decoratebaglist();
+		m_astDecorateBagList[i].ST2PB(*sub);
+	}
+	return 0;
+}
+
+int tagDBDecorateBagInfoList::PB2ST(const DBDecorateBagInfoList& msg)
+{
+	m_nGridsRef = msg.decoratebaglist_size();
+	for (int i = 0;i < m_nGridsRef && i < DB_MAX_DECORATE_BAG ; ++i)
+	{
+		m_astDecorateBagList[i].PB2ST(msg.decoratebaglist(i));
+	}
+	m_nGridsRef = m_nGridsRef <=  DB_MAX_DECORATE_BAG ? m_nGridsRef : DB_MAX_DECORATE_BAG;
+
+	return 0;	
+}
+
+
+int tagDBDecorateBagModuleInfo::ST2PB(DBDecorateBagModuleInfo& msg)
+{
+	DBDecorateBagInfoList* DecorateBagInfoList = msg.mutable_decoratebaginfolist();
+	m_stDecorateBagInfoList.ST2PB(*DecorateBagInfoList);
+	return 0;
+}
+int tagDBDecorateBagModuleInfo::PB2ST(const DBDecorateBagModuleInfo& msg)
+{
+	m_stDecorateBagInfoList.PB2ST(msg.decoratebaginfolist());
+	return 0;
+}
+
+
+////////////////////////////////装饰背包模块保存的数据/////////////////////////////////////////////////

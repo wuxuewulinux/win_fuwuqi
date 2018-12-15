@@ -12,6 +12,7 @@ int CRoleObj::Init()
 	//每个模块都会封装自己的Init()函数 直接用模块的对象调用Init()函数就可以了
 
 	m_oBagMgr.Init();						//背包模块
+	m_oDecorateBagMgr.Init();				//装饰背包模块
 
 	return 0;
 }
@@ -43,9 +44,15 @@ int CRoleObj::SetRoleInfo(const DBRoleInfo& rRoleInfo)
 		SetRandExper(rRoleInfo.rankexper());
 	}
 	//以下就是调用各个模块的设置函数
+
 	if ( rRoleInfo.has_baginfo() )								//背包模块
 	{
 		m_oBagMgr.SetBagInfo( & rRoleInfo.baginfo() );
+	}
+
+	if (rRoleInfo.has_decoratebagmoduleinfo())
+	{
+		m_oDecorateBagMgr.SetDecorateBagInfo(&rRoleInfo.decoratebagmoduleinfo());	//装饰背包模块
 	}
 
 	return 0;
@@ -64,6 +71,11 @@ int CRoleObj::GenDBRoleInfo(DBRoleInfo* pRoleInfo)
 	DBBagInfo * pDBBagInfo = pRoleInfo->mutable_baginfo();
 	HANDCHECH_P( pDBBagInfo, -5);	
 	m_oBagMgr.GenDBBagInfo( *pDBBagInfo );
+
+	//装饰背包模块
+	DBDecorateBagModuleInfo * pDBDecorateBagInfo = pRoleInfo->mutable_decoratebagmoduleinfo();
+	HANDCHECH_P( pDBDecorateBagInfo, -6);	
+	m_oDecorateBagMgr.GenDBDecorateBagInfo(*pDBDecorateBagInfo);
 
 	return 0;
 }

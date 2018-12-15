@@ -2,27 +2,26 @@
 #include"quanju.hpp"
 #include<string.h>
 #include "sendclient.hpp"
-
+#include <arpa/inet.h>
 
 void SendClient(int userio,CSMsg * test)
 {
 	//开始序列化数据
-
-	int len = test->ByteSize();
-	char buff[len+1];
-	if (!test->SerializeToArray(buff,len)) 
+	struct sendshuji sendtest;
+	unsigned short len = test->ByteSize();
+	if (!test->SerializeToArray(sendtest.rMessageBody.buff,len)) 
 	{ 
 		std::cout << "序列化数据失败" << std::endl; 
 	    MYLOG.printflog("序列化数据失败！"); 
 		return;
 	}
-
+	sendtest.rMessageBody.length = htons(len);
+	sendtest.io=userio;
+	sendtest.len = len + sizeof(unsigned short);
 	//开始把该数据送往发送线程去处理发送数据
 
-   struct sendshuji sendtest;
-   sendtest.io=userio;
-   sendtest.length=len;
-   memcpy(sendtest.buff,buff,len);
+   //sendtest.length=len;
+   //memcpy(sendtest.buff,buff,len);
    if(sendduilie.empty() )                 //证明有一个完整包需要发送出去
   {
 	//防止死锁出现
@@ -44,19 +43,18 @@ void SendClient(int userio,CSMsg * test)
 void SendServer(int userio,SSMsg * test)
 {
 	//开始序列化数据
-	int len = test->ByteSize();
-	char buff[len+1];
-	if (!test->SerializeToArray(buff,len)) 
+	struct sendshuji sendtest;
+	unsigned short len = test->ByteSize();
+	if (!test->SerializeToArray(sendtest.rMessageBody.buff,len)) 
 	{ 
 		std::cout << "序列化数据失败" << std::endl; 
 		MYLOG.printflog("序列化数据失败！"); 
 		return;
 	}
-	//开始把该数据送往发送线程去处理发送数据
-	struct sendshuji sendtest;
+	sendtest.rMessageBody.length = htons(len);
 	sendtest.io=userio;
-	sendtest.length=len;
-	memcpy(sendtest.buff,buff,len);
+	sendtest.len = len + sizeof(unsigned short);
+	//开始把该数据送往发送线程去处理发送数据
 	if(sendduilie.empty() )                 //证明有一个完整包需要发送出去
 	{
 		//防止死锁出现
@@ -118,21 +116,19 @@ void errorsend(int userio,int error)
     head->set_uid(3);                  //设置错误模块为 3 标识，该设置以后可能会修改，set_type表示访问模块的类型值
 	head->set_msgid(CS_MSGID_RegisterLogin);
 	//test.set_error(error);                 //错误ID号为error，在客户端提示 error 应该显示那个信息
-	int len = test.ByteSize();
-	char buff[len+1];
-	if (!test.SerializeToArray(buff,len)) 
+	struct sendshuji sendtest;
+	unsigned short len = test.ByteSize();
+	if (!test.SerializeToArray(sendtest.rMessageBody.buff,len)) 
 	{ 
 		std::cout << "序列化数据失败" << std::endl; 
 	    MYLOG.printflog("序列化数据失败！"); 
 		return;
 	}
-
+	sendtest.rMessageBody.length = htons(len);
+	sendtest.io=userio;
+	sendtest.len = len + sizeof(unsigned short);
 	//开始把该数据送往发送线程去处理发送数据
 
-   struct sendshuji sendtest;
-   sendtest.io=userio;
-   sendtest.length=len;
-   memcpy(sendtest.buff,buff,len);
    if(sendduilie.empty() )                 //证明有一个完整包需要发送出去
   {
 	//防止死锁出现

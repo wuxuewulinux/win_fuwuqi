@@ -1,0 +1,119 @@
+
+import "DBmsg.proto";	//引用要保存到数据库结构的proto文件，该文件保存大量的各个模块的数据结构
+
+//SSMsg.proto文件和CSMsg.proto文件模式都一样。都是通信协议文件。CSMsg.proto文件是用来游戏服务器与客户端通信，SSMsg.proto文件是用来游戏服务器与数据库服务器通信
+
+//重点: Req表示数据库服务器需要，Rsp表示游戏服务器需要
+
+enum SSRegisterLoginCmd
+{
+	//填写每个模块的子功能枚举ID号
+	SSRegisterLoginCmd_Register = 1;  			//注册功能
+	SSRegisterLoginCmd_Login = 2;	  			//登录功能
+	SSRegisterLoginCmd_Quit = 3;				//退出游戏功能
+	SSRegisterLoginCmd_UpdateDatabase = 4;		//更新数据库
+}
+
+message SSLoginReq								//登陆		
+{
+	optional string account = 1; 				//账号
+	optional string password = 2;				//密码
+}
+
+message SSLoginRsp								//登陆		
+{
+	optional uint32 type = 1;					//返回：1表示账号和密码错误，2表示有人在登陆，3表示登陆成功
+	optional DBRoleInfo Role = 2;				//role结构体，该结构体是保存所有模块的结构体和基本人物属性信息 
+}
+
+message SSRegisterReq								//注册 		
+{
+	optional string account = 1; 				//账号
+	optional string password = 2;				//密码
+	optional string name = 3;					//名称
+}
+
+message SSRegisterRsp								//注册 		
+{
+	optional uint32 type = 1;					//返回：1表示账号已存在，2表示名称已存在，3表示注册成功
+}
+
+message SSQuitReq								//退出功能 和 数据库更新功能   共享该数据结构
+{
+	optional DBRoleInfo Role = 1;				//角色结构体	
+}
+
+
+message SSRegisterLoginReqParam
+{
+
+ //该模块所有子功能的数据都保存在这里，（服务器需要的数据)
+ 
+	optional SSLoginReq LoginReq = 1;
+	optional SSRegisterReq RegisterReq = 2;
+	optional SSQuitReq QuitReq = 3;
+}
+
+
+message SSRegisterLoginRspParam
+{
+
+   //该模块所有子功能的数据都保存在这里，（客户端需要的数据)
+	optional SSLoginRsp LoginRsp = 1;
+	optional SSRegisterRsp RegisterRsp = 2;
+}
+
+
+message SSRegisterLoginReq	//把模块所有结果或者数据整合起来（服务器需要的)
+{
+	required SSRegisterLoginCmd  cmd = 1;						//模块功能的ID号
+	optional SSRegisterLoginReqParam reqParam = 2;			//模块的所有子功能结构体数据都保存在该结果中
+}
+
+
+message SSRegisterLoginRsp									//把模块所有结果或者数据整合起来（客户端需要的)
+{
+	optional int32 result = 1;								//模块的错误码提示（只有客户端才多一个错误码)
+	required SSRegisterLoginCmd cmd = 2;  						//模块功能的ID号
+	optional SSRegisterLoginRspParam rspParam = 3 ;  			//模块的所有子功能结构体数据都保存在该结果中
+}
+
+
+enum SSMsgID
+{
+	//填写模块的ID号
+	
+	SS_MSGID_MIN = 1000;
+	
+	SS_MSGID_GameMysql = 1001; 	//游戏服务器与数据库服务器通信的模块，该模块包含所有功能
+	
+	//如果还有别的模块就这里进行扩展
+	
+	SS_MSGID_MAX = 1002;
+}
+
+
+message SSMsgBody
+{
+	//把每个模块的数据结构添加到这里(每增加一个模块就要添加 ...Req 和 ..Rsp两个结构
+	
+	optional SSRegisterLoginReq RegisterLoginReq = 1;
+	optional SSRegisterLoginRsp RegisterLoginRsp = 2;
+}
+
+
+
+message SSMsgHead
+{
+	required uint64 uid = 1;      							//唯一uid
+	required SSMsgID msgID = 2;   							//每个模块都有自己的ID号
+}
+
+
+
+message SSMsg   //总的数据包（发送出去的数据包）
+{
+	required SSMsgHead head = 1;   							//头部，这个是固定的
+	required SSMsgBody body = 2;							//传递的数据保存在这里
+}
+

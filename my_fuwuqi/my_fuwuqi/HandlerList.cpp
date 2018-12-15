@@ -8,6 +8,8 @@ IHandler* CHandlerList::m_apSSHandler[SS_MSGID_SIZE];
 
 RegisterLoginHandler CHandlerList::m_oRegisterLoginHandler;					//初始化登陆注册handler
 CBagHandler CHandlerList::m_oBagHandler;									//初始化背包handler
+DecorateBagHandler CHandlerList::m_oDecorateBagHandler;						//初始化装饰背包handler
+
 
 CHandlerList* gm_hand = NULL;
 
@@ -25,6 +27,7 @@ int CHandlerList::Init()  //把Handler压到m_apCSHandler数组中。
 {
 	RegisterHandler(CS_MSGID_RegisterLogin,		&m_oRegisterLoginHandler);
 	RegisterHandler(CS_MSGID_BAG,		&m_oBagHandler);
+	RegisterHandler(CS_MSGID_DecorateBAG,&m_oDecorateBagHandler);
 
 	return 0;
 }

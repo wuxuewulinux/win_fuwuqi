@@ -102,6 +102,12 @@
     <ClInclude Include="DecorateBagManager.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="DecorateBagHandler.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="DecorateBagWork.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BagHandler.cpp">
@@ -192,6 +198,12 @@
       <Filter>config</Filter>
     </ClCompile>
     <ClCompile Include="DecorateBagManager.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="DecorateBagHandler.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="DecorateBagWork.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

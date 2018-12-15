@@ -1,0 +1,281 @@
+
+//注册登录模块为标准书写
+
+
+
+import "DBmsg.proto";	//引用要保存到数据库结构的proto文件，该文件保存大量的各个模块的数据结构
+
+///////////////////////////////////////////注册登录模块///////////////////////////////////////////////////////////
+enum CSRegisterLoginCmd
+{
+	//填写每个模块的子功能枚举ID号
+	
+	CSRegisterLoginCmd_Register = 1;  			//注册功能
+	CSRegisterLoginCmd_Login = 2;	  			//登录功能
+	CSRegisterLoginCmd_Quit = 3;				//退出游戏功能 (重点)退出有两种情况:1.一种是还没有登录角色进游戏，2.一种是已经登陆角色在游戏 . 如果还没有登录角色退出就要给UID赋值为 0传到传到服务器
+}
+
+message CSLoginReq								//登陆		
+{
+	optional string account = 1; 				//账号
+	optional string password = 2;				//密码
+}
+
+message CSLoginRsp								//登陆		
+{
+	optional uint32 type = 1;					//返回：1表示账号和密码错误，2表示有人在登陆，3表示登陆成功
+	optional DBRoleInfo Role = 2;				//role结构体，该结构体是保存所有模块的结构体和基本人物属性信息
+}
+
+message CSRegisterReq								//注册 		
+{
+	optional string account = 1; 				//账号
+	optional string password = 2;				//密码
+	optional string name = 3;					//名称
+}
+
+message CSRegisterRsp								//注册 		
+{
+	optional uint32 type = 1;					//返回：1表示账号已存在，2表示名称已存在，3表示注册成功
+}
+
+message CSQuitReq
+{
+	optional uint32 pad = 1;					//退出，不需要填，客户端填个0就可以
+}
+
+message CSRegisterLoginReqParam
+{
+
+ //该模块所有子功能的数据都保存在这里，（服务器需要的数据)
+ 
+	optional CSLoginReq LoginReq = 1;
+	optional CSRegisterReq RegisterReq = 2;
+	optional CSQuitReq QuitReq = 3;
+}
+
+
+message CSRegisterLoginRspParam
+{
+
+   //该模块所有子功能的数据都保存在这里，（客户端需要的数据)
+	optional CSLoginRsp LoginRsp = 1;
+	optional CSRegisterRsp RegisterRsp = 2;
+}
+
+
+message CSRegisterLoginReq	//把模块所有结果或者数据整合起来（服务器需要的)
+{
+	required CSRegisterLoginCmd  cmd = 1;						//模块功能的ID号
+	optional CSRegisterLoginReqParam reqParam = 2;			//模块的所有子功能结构体数据都保存在该结果中
+}
+
+
+message CSRegisterLoginRsp									//把模块所有结果或者数据整合起来（客户端需要的)
+{
+	optional int32 result = 1;								//模块的错误码提示（只有客户端才多一个错误码)
+	required CSRegisterLoginCmd cmd = 2;  						//模块功能的ID号
+	optional CSRegisterLoginRspParam rspParam = 3 ;  			//模块的所有子功能结构体数据都保存在该结果中
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////注册登录模块///////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////背包模块/////////////////////////////////////////////////////////////////
+
+enum CSBagCmd
+{
+	//填写每个模块的子功能枚举ID号
+	
+	CSBagCmd_Fetch = 1;								//背包界面展现功能 
+	CSBagCmd_Use = 2;								//背包物品使用功能		  				
+}
+
+message CSBagFetchReq
+{
+	optional uint32 pad = 1 ; 						//填充字段，不需要填.客户端填0就可以了
+}
+
+message CSBagGridInfo
+{
+	optional uint32	ItemId = 1; 					//物品ID
+	optional uint32 Num = 2; 						//物品数量
+}
+
+message CSBagBagInfo
+{
+	repeated CSBagGridInfo GridInfo = 1; 			//物品
+}
+
+message CSBagFetchRsp
+{
+	optional CSBagBagInfo BagInfo = 1; 				// 背包
+}
+
+message CSBagUseReq									//物品使用功能
+{
+	optional uint32 ItemId = 1; 					//使用的物品ID
+	optional uint32 ItemNum = 2; 					//使用的物品数量
+	optional uint32 PickedId = 3; 					//针对特殊宝箱 选择的ID，该字段留给以后的特殊物品使用会用到。
+}
+
+message CSItemInfo
+{
+	optional int32 ID = 1;  						//物品ID，包括 金币， 石头等资源类
+	optional int32 num  = 2; 						// 物品数量
+}
+
+message CSItemInfoList
+{
+	repeated CSItemInfo ItemInfo = 1;  
+}
+
+message CSBagUseRsp									//物品使用功能
+{
+	optional CSItemInfoList ItemInfoList = 1; 		// 返回背包列表
+}
+
+message CSBagReqParam
+{
+	optional CSBagFetchReq FetchReq = 1 ;
+	optional CSBagUseReq UseReq = 2;
+}
+
+message CSBagRspParam
+{
+	optional CSBagFetchRsp FetchRsp = 1 ;
+	optional CSBagUseRsp UseRsp = 2;
+}
+
+message CSBagReq
+{
+	required CSBagCmd cmd = 1 ;
+	optional CSBagReqParam reqParam = 2;
+}
+
+message CSBagRsp
+{
+	optional int32 result = 1 ;								
+	required CSBagCmd cmd = 2 ;
+	optional CSBagRspParam  rspParam = 3 ;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////背包模块///////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////装饰背包模块/////////////////////////////////////////////////////////////////
+
+enum CSDecorateBagCmd
+{
+	//填写每个模块的子功能枚举ID号
+	
+	CSDecorateBagCmd_Fetch = 1;								//装饰背包界面展现功能 
+			  				
+}
+
+message CSDecorateBagFetchReq
+{
+	optional uint32 type = 1 ; 						//装饰背包类型，因为有很多不同种类的装饰背包
+}
+
+message CSDecorateBagGridInfo
+{
+	optional uint32	ItemId = 1; 					//装饰物品ID
+	optional uint32 type = 2; 						//装饰背包的种类
+	optional uint64 EndTime = 3;					//装饰物品的结束时间
+}
+
+message CSDecorateBagInfo
+{
+	repeated CSDecorateBagGridInfo DecorateGridInfo = 1; 			
+}
+
+message CSDecorateBagFetchRsp
+{
+	optional uint32 type = 1;
+	optional CSDecorateBagInfo DecorateBagInfo = 2; 				
+}
+
+
+message CSDecorateBagReqParam
+{
+	optional CSDecorateBagFetchReq FetchReq = 1 ;
+}
+
+message CSDecorateBagRspParam
+{
+	optional CSDecorateBagFetchRsp FetchRsp = 1 ;
+}
+
+message CSDecorateBagReq
+{
+	required CSDecorateBagCmd cmd = 1 ;
+	optional CSDecorateBagReqParam reqParam = 2;
+}
+
+message CSDecorateBagRsp
+{
+	optional int32 result = 1 ;								
+	required CSDecorateBagCmd cmd = 2 ;
+	optional CSDecorateBagRspParam  rspParam = 3 ;
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////装饰背包模块/////////////////////////////////////////////////////////////////
+
+
+
+
+enum CSMsgID
+{
+	//填写模块的ID号
+	
+	CS_MSGID_MIN = 0;
+	
+	CS_MSGID_RegisterLogin = 1; 							//注册登录模块的模块ID号
+	
+	CS_MSGID_BAG = 2;										//背包模块
+	
+	CS_MSGID_DecorateBAG = 3;								//装饰背包模块		
+	//如果还有别的模块就这里进行扩展
+	
+	CS_MSGID_MAX = 4;
+} 
+
+message CSMsgBody
+{
+	//把每个模块的数据结构添加到这里(每增加一个模块就要添加 ...Req 和 ..Rsp两个结构
+	
+	optional CSRegisterLoginReq RegisterLoginReq = 1;
+	optional CSRegisterLoginRsp RegisterLoginRsp = 2;
+	
+	optional CSBagReq BagReq = 3;
+	optional CSBagRsp BagRsp = 4;
+	
+	optional CSDecorateBagReq DecorateBagReq = 5;
+	optional CSDecorateBagRsp DecorateBagRsp = 6;
+}
+
+
+
+message CSMsgHead
+{
+	required uint64 uid = 1;      							//唯一uid
+	required CSMsgID msgID = 2;   							//每个模块都有自己的ID号
+}
+
+
+
+message CSMsg   //总的数据包（发送出去的数据包）
+{
+	required CSMsgHead head = 1;   							//头部，这个是固定的
+	required CSMsgBody body = 2;							//传递的数据保存在这里
+}
+
+

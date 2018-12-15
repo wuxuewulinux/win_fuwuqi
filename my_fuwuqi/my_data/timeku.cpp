@@ -8,7 +8,7 @@ bool paixu(const fuzhunode & a,const fuzhunode & b)   //计算排序，主要是排序出哪
 }
 
 
-long get_time()     //获取目前系统的时间，时间以毫秒为单位
+uint64_t get_time()     //获取目前系统的时间，时间以毫秒为单位
 {
 
 	struct timeval tv;

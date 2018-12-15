@@ -50,7 +50,7 @@ int zongret=recv(fd,message_m->clearbuff,count,MSG_PEEK);        //先把目前�
 {
     if(errno == EINTR)   //重新接收
 	{
-		int ret=(int)recv(fd,&message_m->len,sizeof(short),MSG_PEEK);
+		int ret=(int)recv(fd,&message_m->len,sizeof(unsigned short),MSG_PEEK);
 		 if( ret == 0 )
 	        return -1;    
 	}
@@ -58,7 +58,7 @@ int zongret=recv(fd,message_m->clearbuff,count,MSG_PEEK);        //先把目前�
 		return -3;
 }
 
-int ret=recv(fd,&message_m->len,sizeof(short),MSG_PEEK);                   //先读头部字节，使用recv函数是为了不从缓冲区去除数据，等他足够一个数据包在用read函数读。 
+int ret=recv(fd,&message_m->len,sizeof(unsigned short),MSG_PEEK);                   //先读头部字节，使用recv函数是为了不从缓冲区去除数据，等他足够一个数据包在用read函数读。 
 
    if(ret==0)
    {
@@ -68,16 +68,16 @@ int ret=recv(fd,&message_m->len,sizeof(short),MSG_PEEK);                   //先
 {
     if(errno == EINTR)   //重新接收
 	{
-		ret=recv(fd,&message_m->len,sizeof(short),MSG_PEEK);
+		ret=recv(fd,&message_m->len,sizeof(unsigned short),MSG_PEEK);
 		 if(ret==0)
 	        return -1;    
 	}
 	else 
 		return -3;
 }
-  if(ret < (int)sizeof(short))
+  if(ret < (int)sizeof(unsigned short))
 	  return -3;
-  if(ret == (int)sizeof(short))                    //头部足够字节将进行解析头部的数值拿到包体长度，然后在读包体的字节
+  if(ret == (int)sizeof(unsigned short))                    //头部足够字节将进行解析头部的数值拿到包体长度，然后在读包体的字节
   {
    message_m->len=ntohs(message_m->len);
    if(message_m->len > count)                //发送了超标的数据客户端将对他进行处理。
@@ -85,12 +85,12 @@ int ret=recv(fd,&message_m->len,sizeof(short),MSG_PEEK);                   //先
       return -2;
    }
    
-   if(zongret < (int)((int)sizeof(short)+message_m->len))               //如果缓冲下来的数据如果小于一个数据包的字节，证明缓冲区目前还不够一个数据包
+   if(zongret < (int)((int)sizeof(unsigned short)+message_m->len))               //如果缓冲下来的数据如果小于一个数据包的字节，证明缓冲区目前还不够一个数据包
 	   return -3;
 
-   memcpy(message_m->buff,message_m->clearbuff+sizeof(short),message_m->len);      //把一个数据包的包体字节拷贝出去
-   ret=readn(fd,message_m->clearbuff,message_m->len+sizeof(short));                      //从缓冲区清除一个数据包的字节       
-   if(ret == (message_m->len + (int)sizeof(short)))
+   memcpy(message_m->buff,message_m->clearbuff+sizeof(unsigned short),message_m->len);      //把一个数据包的包体字节拷贝出去
+   ret=readn(fd,message_m->clearbuff,message_m->len+sizeof(unsigned short));                      //从缓冲区清除一个数据包的字节       
+   if(ret == (message_m->len + (int)sizeof(unsigned short)))
 	   return 1;                                   //够一个数据包
    else
 	   return -1;             
@@ -104,7 +104,7 @@ int ret=recv(fd,&message_m->len,sizeof(short),MSG_PEEK);                   //先
 
 
 
-int my_write(int fd,void *buffer,int length)
+int my_write(int fd,const void *buffer,int length)
 {
 int bytes_left;
 int written_bytes;

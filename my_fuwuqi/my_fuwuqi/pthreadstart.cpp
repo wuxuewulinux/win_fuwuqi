@@ -159,7 +159,7 @@ void * writexiancheng(void *canshu)
 		while(!sendduilie.empty())   //如果队列有数据就要处理把该数据发送出去
 		{
 			send=sendduilie.front();
-			int value=my_write(send.io,send.buff,send.length);    //向客户端发送一个数据包
+			int value=my_write(send.io,(const char *)&send.rMessageBody,send.len);    //向客户端发送一个数据包
 			if(value<0)
 			{
 				//客户端关闭连接，处理关闭连接的操作

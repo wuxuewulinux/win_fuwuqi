@@ -8,7 +8,7 @@ bool paixu(const fuzhunode & a,const fuzhunode & b)   //计算排序，主要是排序出哪
 }
 
 
-long get_time()     //获取目前系统的时间，时间以毫秒为单位
+uint64_t get_time()     //获取目前系统的时间，时间以毫秒为单位
 {
 
 	struct timeval tv;
@@ -57,7 +57,7 @@ int timeku::startgame(int user_id,void (*p)(void * canshu),void * data_t) //user
 	if(index_stack.empty())   //如果栈没有数值，证明容器内存不够，需要扩大内存
 	{
 		rongqi.resize(rongqi.size()+100);     //在继续增加100内存
-		for(int i=rongqi.size()-100;i<rongqi.size();i++)
+		for(int i=rongqi.size()-100;i<(int)rongqi.size();i++)
 			index_stack.push(i);    //把空闲的内存下标压入栈中
 		int value=index_stack.top();     //取出一个空闲的内存下标
 		index_stack.pop();
