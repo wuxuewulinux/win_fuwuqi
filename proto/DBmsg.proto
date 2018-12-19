@@ -49,6 +49,23 @@ message	DBDecorateBagInfoList
 message	DBDecorateBagModuleInfo							//装饰背包模块的总参数，所有类型的装饰背包集合在该结构中
 {
 	optional DBDecorateBagInfoList DecorateBagInfoList = 1;		//装饰背包数组
+	repeated uint32 TypeList = 2;
+}
+
+message DBDecorateBagVIPItem
+{
+	optional uint32 grade = 1;			//VIP等级
+	optional uint32 exper = 2;			//VIP经验值
+}
+
+message DBDecorateBagVIPList
+{
+	repeated DBDecorateBagVIPItem VIPItemList = 1;		//所有VIP种类 （红，黄，紫色)
+}
+
+message DBDecorateBagVIPInfo
+{
+	optional DBDecorateBagVIPList VIPListInfo = 1;
 }
 
 /////////////////////////////////////////////////////////////装饰背包模块///////////////////////////////////////////////////////////////
@@ -68,5 +85,7 @@ optional uint32 RankExper = 6;								//游戏该段位的经验
 optional DBBagInfo BagInfo = 7;								//背包模块
 
 optional DBDecorateBagModuleInfo DecorateBagModuleInfo = 8;	//装饰背包模块
+optional DBDecorateBagVIPInfo VIPInfo = 9;					//装饰背包VIP数组
 
 }
+

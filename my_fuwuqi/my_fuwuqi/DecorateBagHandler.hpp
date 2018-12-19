@@ -24,6 +24,11 @@ private:
 private:
 	int OnFetchReq(const CSMsg& rCSMsg, int iFd);										//装饰背包界面显示
 
+	int OnShowSetReq(const CSMsg& rCSMsg, int iFd);										//装饰背包设置界面默认显示
+
+	int OnVIPFetchReq(const CSMsg& rCSMsg, int iFd);									//VIP装饰背包界面显示
+
+
 
 };
 

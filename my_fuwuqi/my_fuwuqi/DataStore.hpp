@@ -20,6 +20,9 @@ const int DB_MAX_DECORATE_BAG = 30;				//最多的装饰背包种类只有30种
 
 const int DB_MAX_DECORATE_BAG_NUM = 100;		//每个种类的装饰背包的ID最多有 100种装饰id
 
+const int DB_MAX_VIP = 3;						//最多只有三种类型VIP（红，黄，紫色）
+
+
 typedef struct tagDBBagGrid
 {
 	uint32_t m_uiID; // Item ID
@@ -95,10 +98,36 @@ typedef struct tagDBDecorateBagInfoList
 typedef struct tagDBDecorateBagModuleInfo
 {
 	TDBDecorateBagInfoList m_stDecorateBagInfoList; // CridList
+	uint32_t m_astTypeList[DB_MAX_DECORATE_BAG];	//每个类型背包都会有一个设置默认值
 
 	int ST2PB(DBDecorateBagModuleInfo& msg);
 	int PB2ST(const DBDecorateBagModuleInfo& msg);
 } TDBDecorateBagModuleInfo;
+
+typedef struct tagDBDecorateBagVIPItem
+{
+	uint32_t m_uiGrade;			// VIP等级
+	uint32_t m_uiExper;			// VIP经验值
+
+	int ST2PB(DBDecorateBagVIPItem& msg);
+	int PB2ST(const DBDecorateBagVIPItem& msg);
+} TDBDecorateBagVIPItem;
+
+typedef struct tagDBDecorateBagVIPList
+{
+	TDBDecorateBagVIPItem m_astVipGrids[DB_MAX_VIP]; // VIP 数组
+
+	int ST2PB(DBDecorateBagVIPList& msg);
+	int PB2ST(const DBDecorateBagVIPList& msg);
+} TDBDecorateBagVIPList;
+
+typedef struct tagDBDecorateBagVIPInfo
+{
+	TDBDecorateBagVIPList m_stVipGridList; // CridList
+
+	int ST2PB(DBDecorateBagVIPInfo& msg);
+	int PB2ST(const DBDecorateBagVIPInfo& msg);
+} TDBDecorateBagVIPInfo;
 
 
 

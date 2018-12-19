@@ -172,6 +172,8 @@ enum CSDecorateBagCmd
 	//填写每个模块的子功能枚举ID号
 	
 	CSDecorateBagCmd_Fetch = 1;								//装饰背包界面展现功能 
+	CSDecorateBagCmd_ShowSet = 2;							//装饰背包显示设置物品装饰
+	CSDecorateBagCmd_VipFetch = 3;							//VIP装饰背包界面展现功能
 			  				
 }
 
@@ -194,19 +196,53 @@ message CSDecorateBagInfo
 
 message CSDecorateBagFetchRsp
 {
-	optional uint32 type = 1;
-	optional CSDecorateBagInfo DecorateBagInfo = 2; 				
+	optional uint32 type = 1;			//装饰背包类型，因为有很多不同种类的装饰背包
+	optional uint32 id = 2;				//背包默认显示的装饰ID物品，界面肯定会告诉用户他选择什么
+	optional CSDecorateBagInfo DecorateBagInfo = 3; 				
 }
 
+message CSDecorateBagShowSetReq
+{
+	optional uint32 Type = 1;			//装饰背包类型 
+	optional uint32 id = 2;				//该装饰背包的物品ID号，玩家要使用该物品装饰为默认特效
+}
+
+
+message CSDecorateBagVIPFetchReq
+{
+	optional uint32 type = 1 ; 						//VIP装饰背包类型，肯定为 1 因为VIP背包类型为1
+}
+
+message CSDecorateBagVIPItem
+{
+	optional uint32 VipGrade = 1;				//VIP等级
+	optional uint32 VipExper = 2;				//VIP经验
+}
+
+message CSDecorateBagVIPList
+{
+	repeated CSDecorateBagVIPItem VIPItemList = 1;
+}
+
+message CSDecorateBagVIPFetchRsp
+{
+	optional uint32 type = 1;			//装饰背包类型，因为有很多不同种类的装饰背包
+	optional uint32 id = 2;				//背包默认显示的装饰ID物品，界面肯定会告诉用户他选择什么
+	optional CSDecorateBagInfo DecorateBagInfo = 3; 
+	optional CSDecorateBagVIPList VipList = 4;			//该字段保存所有VIP等级和经验
+}
 
 message CSDecorateBagReqParam
 {
 	optional CSDecorateBagFetchReq FetchReq = 1 ;
+	optional CSDecorateBagShowSetReq ShowSetReq = 2;
+	optional CSDecorateBagVIPFetchReq VIPFetchReq = 3;
 }
 
 message CSDecorateBagRspParam
 {
 	optional CSDecorateBagFetchRsp FetchRsp = 1 ;
+	optional CSDecorateBagVIPFetchRsp VIPFetchRsp = 2;
 }
 
 message CSDecorateBagReq

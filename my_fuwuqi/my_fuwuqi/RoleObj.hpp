@@ -64,6 +64,7 @@ private:
 
 	uint32_t uiLevelExper;									//人物等级经验
 
+
 	//添加各个模块的类对象在这里
 
 	CBagManager	m_oBagMgr;									//背包模块

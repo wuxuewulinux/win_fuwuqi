@@ -14,7 +14,9 @@
     <ClInclude Include="BagHandler.hpp" />
     <ClInclude Include="BagManager.hpp" />
     <ClInclude Include="BagWork.hpp" />
+    <ClInclude Include="CSmsg.pb.h" />
     <ClInclude Include="DataStore.hpp" />
+    <ClInclude Include="DBmsg.pb.h" />
     <ClInclude Include="DecorateBagHandler.hpp" />
     <ClInclude Include="DecorateBagManager.hpp" />
     <ClInclude Include="DecorateBagWork.hpp" />
@@ -48,7 +50,9 @@
     <ClCompile Include="BagHandler.cpp" />
     <ClCompile Include="BagManager.cpp" />
     <ClCompile Include="BagWork.cpp" />
+    <ClCompile Include="CSmsg.pb.cc" />
     <ClCompile Include="DataStore.cpp" />
+    <ClCompile Include="DBmsg.pb.cc" />
     <ClCompile Include="DecorateBagHandler.cpp" />
     <ClCompile Include="DecorateBagManager.cpp" />
     <ClCompile Include="DecorateBagWork.cpp" />

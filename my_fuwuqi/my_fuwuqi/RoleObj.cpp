@@ -54,6 +54,10 @@ int CRoleObj::SetRoleInfo(const DBRoleInfo& rRoleInfo)
 	{
 		m_oDecorateBagMgr.SetDecorateBagInfo(&rRoleInfo.decoratebagmoduleinfo());	//装饰背包模块
 	}
+	if (rRoleInfo.has_vipinfo())
+	{
+		m_oDecorateBagMgr.SetDecorateVIPBagInfo(&rRoleInfo.vipinfo());				//装饰背包VIP记录
+	}
 
 	return 0;
 }
@@ -76,6 +80,11 @@ int CRoleObj::GenDBRoleInfo(DBRoleInfo* pRoleInfo)
 	DBDecorateBagModuleInfo * pDBDecorateBagInfo = pRoleInfo->mutable_decoratebagmoduleinfo();
 	HANDCHECH_P( pDBDecorateBagInfo, -6);	
 	m_oDecorateBagMgr.GenDBDecorateBagInfo(*pDBDecorateBagInfo);
+
+	//装饰背包VIP记录保存
+	DBDecorateBagVIPInfo * pDBDecorateVIPBagInfo = pRoleInfo->mutable_vipinfo();
+	HANDCHECH_P( pDBDecorateVIPBagInfo, -6);	
+	m_oDecorateBagMgr.GenDBDecorateVIPBagInfo(*pDBDecorateVIPBagInfo);
 
 	return 0;
 }

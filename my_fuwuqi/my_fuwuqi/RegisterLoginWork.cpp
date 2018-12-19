@@ -2,6 +2,7 @@
 #include "RegisterLoginWork.hpp"
 #include "enterfunction.hpp"
 #include "epoll_ku.hpp"
+#include "../proto/DBmsg.pb.h"
 
 /*
 登陆和注册还没有role类的出现
@@ -78,8 +79,10 @@ int RegisterLoginWork::LoginRsp(const SSLoginRsp& rRsp,CSLoginRsp* pRsp,int Sock
 		{
 			rRole.SetRoleInfo(rRsp.role());			//给role类每个值赋值
 			rRole.SetFd(SocketIo);
+			rRole.GetDecorateBagMgr().AllCheckDecorateItemTime();			//刷新所有装饰背包时间
+			DBRoleInfo rRoleInfo;
+			rRole.GenDBRoleInfo(&rRoleInfo);
 			PushRole(rRsp.role().uid(),&rRole);		//成功的把一个role压入到容器中
-			DBRoleInfo rRoleInfo = rRsp.role();
 			pRsp->set_allocated_role(&rRoleInfo);
 		}
 	}

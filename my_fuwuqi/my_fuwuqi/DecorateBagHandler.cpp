@@ -33,7 +33,17 @@ int DecorateBagHandler::OnClientMsg(const CSMsg& rCSMsg, int iFd)
 	{
 	case CSDecorateBagCmd_Fetch:
 		{
-			iRet = OnFetchReq(rCSMsg, iFd);						//背包界面显示功能
+			iRet = OnFetchReq(rCSMsg, iFd);							//装饰背包界面显示功能
+		}
+		break;
+	case CSDecorateBagCmd_ShowSet:
+		{
+			iRet = OnShowSetReq(rCSMsg, iFd);						//装饰背包设置默认显示
+		}
+		break;
+	case CSDecorateBagCmd_VipFetch:
+		{
+			iRet = OnVIPFetchReq(rCSMsg, iFd);						//VIP装饰背包界面显示功能
 		}
 		break;
 	default:
@@ -118,7 +128,7 @@ void* DecorateBagHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int
 	//从这里开始增加结构指针就可以了。
 
 	CSDecorateBagFetchRsp * pFetchRsp = pReqParam->mutable_fetchrsp();				//获取界面展示结构指针内存
-			
+	CSDecorateBagVIPFetchRsp * pVIPFetchRsp	= pReqParam->mutable_vipfetchrsp();
 
 	/////////////////////////
 
@@ -127,7 +137,10 @@ void* DecorateBagHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int
 	{
 		return (void*)pFetchRsp;
 	}
-	
+	else if (CmdType == CSDecorateBagCmd_VipFetch)
+	{
+		return (void*)pVIPFetchRsp;
+	}
 	return NULL;
 }
 
@@ -145,10 +158,45 @@ int DecorateBagHandler::OnFetchReq(const CSMsg& rCSMsg, int iFd)
 
 	pFetchRsp->set_type(rFetchReq.type());
 	CSDecorateBagInfo* pCSBagInfo = pFetchRsp->mutable_decoratebaginfo();
-	int iRet = DecorateBagWork::GenCSBagInfo( pRoleObj,rFetchReq, *pCSBagInfo);
+	int iRet = DecorateBagWork::GenCSBagInfo( pRoleObj,rFetchReq, *pCSBagInfo,pFetchRsp);
 	if (iRet == 0)
 	{
 		SendClient(iFd,&oCSMsg);
 	}
+	return 0;
+}
+
+
+
+int DecorateBagHandler::OnShowSetReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSDecorateBagShowSetReq rReq = rCSMsg.body().decoratebagreq().reqparam().showsetreq();
+
+	CRoleObj* pRoleObj = GetRole(rCSMsg.head().uid());
+	HANDCHECH_P(pRoleObj, -1);
+	DecorateBagWork::OnBagShowSet( pRoleObj,rReq);
+	return 0;
+}
+
+
+
+int DecorateBagHandler::OnVIPFetchReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSDecorateBagVIPFetchReq rFetchReq = rCSMsg.body().decoratebagreq().reqparam().vipfetchreq();
+
+	CRoleObj* pRoleObj = GetRole(rCSMsg.head().uid());
+	HANDCHECH_P(pRoleObj, -1);
+
+	CSMsg oCSMsg;
+	CSDecorateBagVIPFetchRsp* pFetchRsp = static_cast<CSDecorateBagVIPFetchRsp*>(OnCSMsg(oCSMsg, rCSMsg.head().uid(), CS_MSGID_DecorateBAG, CSDecorateBagCmd_VipFetch));
+	HANDCHECH_P(pFetchRsp, -2);
+
+	pFetchRsp->set_type(rFetchReq.type());
+	int iRet = DecorateBagWork::GenCSVIPBagInfo( pRoleObj,rFetchReq, *pFetchRsp);
+	if (iRet == 0)
+	{
+		SendClient(iFd,&oCSMsg);
+	}
+
 	return 0;
 }

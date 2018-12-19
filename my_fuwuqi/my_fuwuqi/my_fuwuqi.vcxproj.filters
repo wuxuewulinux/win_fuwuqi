@@ -108,6 +108,12 @@
     <ClInclude Include="DecorateBagWork.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="CSmsg.pb.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="DBmsg.pb.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BagHandler.cpp">
@@ -204,6 +210,12 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="DecorateBagWork.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="CSmsg.pb.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="DBmsg.pb.cc">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

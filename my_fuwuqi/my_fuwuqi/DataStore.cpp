@@ -170,11 +170,74 @@ int tagDBDecorateBagModuleInfo::ST2PB(DBDecorateBagModuleInfo& msg)
 {
 	DBDecorateBagInfoList* DecorateBagInfoList = msg.mutable_decoratebaginfolist();
 	m_stDecorateBagInfoList.ST2PB(*DecorateBagInfoList);
+	for (int i = 0; i < DB_MAX_DECORATE_BAG; i++)
+	{
+		//uint32_t * pTypeList = msg.add_typelist();
+		//*pTypeList =  m_astTypeList[i];
+		msg.add_typelist(m_astTypeList[i]);
+
+	}
 	return 0;
 }
 int tagDBDecorateBagModuleInfo::PB2ST(const DBDecorateBagModuleInfo& msg)
 {
 	m_stDecorateBagInfoList.PB2ST(msg.decoratebaginfolist());
+	int Max = msg.typelist_size();
+	for (int i = 0; i < Max;i++)
+	{
+		m_astTypeList[i] = msg.typelist(i);
+	}
+	return 0;
+}
+
+
+int tagDBDecorateBagVIPItem::ST2PB(DBDecorateBagVIPItem& msg)
+{
+	msg.set_grade(m_uiGrade);
+	msg.set_exper(m_uiExper);
+	return 0;
+}
+int tagDBDecorateBagVIPItem::PB2ST(const DBDecorateBagVIPItem& msg)
+{
+	if (msg.has_grade())
+	{
+		m_uiGrade = msg.grade();
+	}
+	if (msg.has_exper())
+	{
+		m_uiExper = msg.exper();
+	}
+	return 0;
+}
+
+int tagDBDecorateBagVIPList::ST2PB(DBDecorateBagVIPList& msg)
+{
+	for (int i = 0; i < DB_MAX_VIP; ++i)
+	{
+		DBDecorateBagVIPItem* sub = msg.add_vipitemlist();
+		m_astVipGrids[i].ST2PB(*sub);
+	}
+	return 0;
+}
+int tagDBDecorateBagVIPList::PB2ST(const DBDecorateBagVIPList& msg)
+{
+	int Ref = msg.vipitemlist_size();
+	for (int i = 0; i < Ref; ++i)
+	{
+		m_astVipGrids[i].PB2ST(msg.vipitemlist(i));
+	}
+	return 0;
+}
+
+int tagDBDecorateBagVIPInfo::ST2PB(DBDecorateBagVIPInfo& msg)
+{
+	DBDecorateBagVIPList* viplist = msg.mutable_viplistinfo();
+	m_stVipGridList.ST2PB(*viplist);
+	return 0;
+}
+int tagDBDecorateBagVIPInfo::PB2ST(const DBDecorateBagVIPInfo& msg)
+{
+	m_stVipGridList.PB2ST(msg.viplistinfo());
 	return 0;
 }
 
