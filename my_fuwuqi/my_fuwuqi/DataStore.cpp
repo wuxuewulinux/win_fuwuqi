@@ -179,6 +179,8 @@ int tagDBDecorateBagModuleInfo::ST2PB(DBDecorateBagModuleInfo& msg)
 	}
 	return 0;
 }
+
+
 int tagDBDecorateBagModuleInfo::PB2ST(const DBDecorateBagModuleInfo& msg)
 {
 	m_stDecorateBagInfoList.PB2ST(msg.decoratebaginfolist());
@@ -219,6 +221,8 @@ int tagDBDecorateBagVIPList::ST2PB(DBDecorateBagVIPList& msg)
 	}
 	return 0;
 }
+
+
 int tagDBDecorateBagVIPList::PB2ST(const DBDecorateBagVIPList& msg)
 {
 	int Ref = msg.vipitemlist_size();
@@ -235,6 +239,8 @@ int tagDBDecorateBagVIPInfo::ST2PB(DBDecorateBagVIPInfo& msg)
 	m_stVipGridList.ST2PB(*viplist);
 	return 0;
 }
+
+
 int tagDBDecorateBagVIPInfo::PB2ST(const DBDecorateBagVIPInfo& msg)
 {
 	m_stVipGridList.PB2ST(msg.viplistinfo());

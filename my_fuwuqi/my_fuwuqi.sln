@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "my_fuwuqi", "my_fuwuqi\my_f
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "my_data", "my_data\my_data.vcxproj", "{411FC22E-8CC8-4F35-B21F-E19B13A227D7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "msgServer", "msgServer\msgServer.vcxproj", "{2CB4F936-7D98-4593-8D2A-802AF12E8E16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{411FC22E-8CC8-4F35-B21F-E19B13A227D7}.Debug|Win32.Build.0 = Debug|Win32
 		{411FC22E-8CC8-4F35-B21F-E19B13A227D7}.Release|Win32.ActiveCfg = Release|Win32
 		{411FC22E-8CC8-4F35-B21F-E19B13A227D7}.Release|Win32.Build.0 = Release|Win32
+		{2CB4F936-7D98-4593-8D2A-802AF12E8E16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2CB4F936-7D98-4593-8D2A-802AF12E8E16}.Debug|Win32.Build.0 = Debug|Win32
+		{2CB4F936-7D98-4593-8D2A-802AF12E8E16}.Release|Win32.ActiveCfg = Release|Win32
+		{2CB4F936-7D98-4593-8D2A-802AF12E8E16}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

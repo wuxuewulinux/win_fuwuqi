@@ -125,7 +125,6 @@ int ServerConfig::InitMysqlConfigg(TiXmlElement *RootElement)
 	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
 	while (NULL != dataElement)
 	{
-		short grade = 0;
 		if (!GetSubNodeValue(dataElement, "mysql_user", mysql.user) || mysql.user.empty())
 		{
 			return -1;

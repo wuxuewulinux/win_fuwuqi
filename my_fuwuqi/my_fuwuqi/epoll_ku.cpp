@@ -63,7 +63,7 @@ void Epoll_Ku::Epoll_Wait(Socket_Ku * socket_t)
 	nread=epoll_wait(EpollId,&(*eventts.begin()),(int)(eventts.size()),-1);
 	for(i=0;i<nread;i++)
 	{
-		if(nread == eventts.size())
+		if(nread == (int)eventts.size())
 			Epoll_Size(eventts.size());
 		if(eventts[i].data.fd == socket_t->socket_listcnfd())
 		{
