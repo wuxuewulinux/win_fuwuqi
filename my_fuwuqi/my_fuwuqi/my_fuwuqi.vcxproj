@@ -38,6 +38,7 @@
     <ClInclude Include="serverconfig.hpp" />
     <ClInclude Include="SocketDBClient.hpp" />
     <ClInclude Include="socketku.hpp" />
+    <ClInclude Include="SocketMsgClient.hpp" />
     <ClInclude Include="timeku.hpp" />
     <ClInclude Include="tinystr.hpp" />
     <ClInclude Include="tinyxml.hpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="serverconfig.cpp" />
     <ClCompile Include="SocketDBClient.cpp" />
     <ClCompile Include="socketku.cpp" />
+    <ClCompile Include="SocketMsgClient.cpp" />
     <ClCompile Include="timeku.cpp" />
     <ClCompile Include="tinystr.cpp" />
     <ClCompile Include="tinyxml.cpp" />

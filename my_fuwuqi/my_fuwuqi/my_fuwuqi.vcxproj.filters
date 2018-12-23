@@ -114,6 +114,9 @@
     <ClInclude Include="DBmsg.pb.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="SocketMsgClient.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BagHandler.cpp">
@@ -216,6 +219,9 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="DBmsg.pb.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketMsgClient.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

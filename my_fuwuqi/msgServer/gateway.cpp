@@ -30,7 +30,7 @@ if(pthreadstart() < 0)
  return;
 
 //开始读取游戏配置
-if(!LOGIC_CONFIG->Init("/home/wuxuewu/datamysql/config_xml/"))
+if(!LOGIC_CONFIG->Init("/home/wuxuewu/msgServer/config_xml/"))
 	return;
 
 //开始连接mysql数据库和初始化mysql库类

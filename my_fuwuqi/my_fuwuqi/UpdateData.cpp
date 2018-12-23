@@ -68,7 +68,7 @@ void* UpdateData::OnSSMsg(SSMsg& rMsg, uint64_t Uid, SSMsgID eMsgId, int CmdType
 
 
 
-int UpdateData::UpdateDatabase(CRoleObj* pRoleObj)
+int UpdateData::UpdateDatabase(CRoleObj* pRoleObj,int Status)
 {
 	SSMsg oSSMsg;
 	SSQuitReq* pQuitReq = static_cast<SSQuitReq*>(OnSSMsg(oSSMsg, pRoleObj->GetUid(), SS_MSGID_GameMysql, SSRegisterLoginCmd_UpdateDatabase)); 

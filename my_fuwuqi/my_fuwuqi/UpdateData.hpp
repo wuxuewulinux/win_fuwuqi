@@ -14,7 +14,8 @@ public:
 
 	static void* OnSSMsg(SSMsg& rMsg, uint64_t Uid, SSMsgID eMsgId, int CmdType); 
 
-	static int UpdateDatabase(CRoleObj* pRoleObj);			//更新该用户的数据库所有数据(及时保存数据到数据库)
+	//int Status表示向聊天服务器发送某个状态的更改
+	static int UpdateDatabase(CRoleObj* pRoleObj,int Status);			//更新该用户的数据库所有数据(及时保存数据到数据库)
 
 private:
 

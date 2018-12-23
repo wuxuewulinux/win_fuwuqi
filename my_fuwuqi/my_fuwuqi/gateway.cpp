@@ -8,6 +8,7 @@
 #include "epoll_ku.hpp"
 #include "HandlerList.hpp"
 #include "SocketDBClient.hpp"
+#include "SocketMsgClient.hpp"
 
 void gateway()
 {
@@ -20,6 +21,12 @@ const struct MysqlServer * mMysqlServer = LOGIC_CONFIG->GetServerMysqlConfig().G
 if(DBCLIENT->CreateSocket(mMysqlServer->ip.c_str(),mMysqlServer->port) < 0)
 	return;
 if(DBCLIENT->ConnectDB() < 0)
+	return;
+//连接聊天服务器
+const struct MsgServer * mMsgServer = LOGIC_CONFIG->GetServerMysqlConfig().GetMsgServerConfig(); //获取聊天服务器IP和端口
+if(MSGCLIENT->CreateSocket(mMsgServer->ip.c_str(),mMsgServer->port) < 0)
+	return;
+if(MSGCLIENT->ConnectDB() < 0)
 	return;
 //初始化游戏模块 日志
 if(!LogInit("/home/wuxuewu/fuwuqi/"))

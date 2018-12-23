@@ -21,6 +21,14 @@ struct MysqlServer
 
 };
 
+struct MsgServer
+{
+	std::string ip;             //获取服务器IP地址
+
+	int port;                  //获取服务器端口号
+
+};
+
 struct my_mysql
 {
 	std::string user;                      //使用数据库的用户
@@ -49,11 +57,15 @@ public:
 	
 	int InitMysqlTableConfigg(TiXmlElement *RootElement);    //读取数据库中所有表的配置信息
 
+	int InitMsgServerConfigg(TiXmlElement *RootElement);	//读取聊天服务器（IP,端口)配置信息
+
 	struct my_server * GetServerConfig(){return &server;}    //获取服务器的配置信息（ip与端口）
 
 	struct my_mysql * GetMysqlConfig(){return &mysql;}    //获取数据库所有配置信息
 
 	struct MysqlServer * GetMysqlServerConfig(){return &mMysqlServer;}    //获取mysql服务器配置信息
+
+	struct MsgServer * GetMsgServerConfig(){return &mMsgServer;}
 
 	
 
@@ -65,6 +77,8 @@ private:
 	struct my_mysql mysql;
 
 	struct MysqlServer mMysqlServer;
+
+	struct MsgServer mMsgServer;
 	
 };
 
