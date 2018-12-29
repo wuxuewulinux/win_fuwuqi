@@ -68,7 +68,7 @@ void * readxiancheng(void *canshu)
 
 void ChuLiAgemess(struct message * message,int * io)
 {
-	SSMsg mess_ti;
+	CSMsg mess_ti;
 
 	//反序列化数据包
 
@@ -79,11 +79,21 @@ void ChuLiAgemess(struct message * message,int * io)
 		return;
 	}
 	//获取模块入口
-	if (SS_MSGID_MIN < mess_ti.head().msgid() && mess_ti.head().msgid() < SS_MSGID_MAX)
+	if ( mess_ti.head().msgid() == CS_MSGID_Chat)
 	{
-		IHandler* handler = HANDLERLIST->GetHandler(mess_ti.head().msgid());
+		IHandler* handler = HANDLERLIST->GetHandler();
+		if (handler == NULL)
+		{
+			return;
+		}
 		//执行模块功能
 		handler->OnServerMsg(mess_ti,*io);
+	}
+	else
+	{
+		std::cout << "OnServerMsg Fail !" << std::endl;
+		MYLOG.printflog("OnServerMsg Fail ！");     
+		return;
 	}
 	
 }

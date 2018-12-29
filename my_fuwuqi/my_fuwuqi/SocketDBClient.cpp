@@ -52,7 +52,7 @@ int SocketDBClient::ConnectDB()
 
 int SocketDBClient::GetMapIo(int Key)
 {
-map<int, int>::const_iterator iter = rMap.find(Key);
+map<uint64_t, int>::const_iterator iter = rMap.find(Key);
 if (rMap.end() != iter)
 {
 	return iter->second;

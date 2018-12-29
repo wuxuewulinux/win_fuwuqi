@@ -29,6 +29,9 @@ int GameMysqlWork::Register(const SSRegisterReq& rReq,SSRegisterRsp* pRsp)
 		pRsp->set_type(3);
 		std::string rRole = "";
 		MYSQLKU->InsertAccount(rReq.account(),rReq.password(),rReq.name(),rRole);	//插入用户到数据库
+		uint64_t Uid = MYSQLKU->GetUid(rReq.account());
+		pRsp->set_uid(Uid);
+		pRsp->set_name(MYSQLKU->GetName(Uid));
 	}
 	return 0;
 }

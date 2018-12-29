@@ -1,9 +1,9 @@
 
 #ifndef _SENDCLIENT_HPP_
 #define _SENDCLIENT_HPP_
-#include "../proto/SSmsg.pb.h"
+#include "../proto/CSmsg.pb.h"
 
-void SendServer(int userio,SSMsg * test);	//该函数是发给另一个服务器（进程)
+void SendClient(int userio,CSMsg * test);	//该函数是发给另一个服务器（进程)
 
 void timesend(int kaiguan,int index,int miao,int userid); //该函数是逻辑层只要用到定时器就会调用，给上层一个定时接口
 

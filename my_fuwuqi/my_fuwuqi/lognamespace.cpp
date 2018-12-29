@@ -1,6 +1,6 @@
 
 #include"lognamespace.hpp"
-#include "enterfunction.hpp"
+//#include "enterfunction.hpp"
 
 
 
@@ -14,6 +14,7 @@ namespace logquanju
 
 }
 
+/*
 	bool LogInit(std::string path)    //启动所有日志文件
 	{
 		//启动麻将模块的日志记录
@@ -28,5 +29,5 @@ namespace logquanju
 	  return true;
 	  
 	}
-
+	*/
 

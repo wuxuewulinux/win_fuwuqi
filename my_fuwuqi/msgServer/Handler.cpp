@@ -5,15 +5,15 @@ IHandler::~IHandler()
 {
 
 }
-/*
-int IHandler::OnClientMsg(const SSMsg& rSSMsg, int iFd)
+
+int IHandler::OnClientMsg(const CSMsg& rCSMsg, int iFd)
 {
 	return 0;
 }
-*/
 
 
-int IHandler::OnServerMsg(const SSMsg& rSSMsg, int iFd)
+
+int IHandler::OnServerMsg(const CSMsg& rCSMsg, int iFd)
 {
 
 	return 0;

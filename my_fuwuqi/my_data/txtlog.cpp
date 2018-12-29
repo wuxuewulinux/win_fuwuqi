@@ -31,7 +31,7 @@ void txtlog::sprintf(char * buffer,const char * format,...)
 	vsprintf(buffer,format,arg);
 	std::string name(buffer);
 	printflog(name);             //把日志内容按格式输入到日志文件中
-	memset(buffer,0,sizeof(buffer));
+	memset(buffer,0,200);
 	va_end(arg);
 }
 

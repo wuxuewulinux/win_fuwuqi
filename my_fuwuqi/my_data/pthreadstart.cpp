@@ -29,7 +29,7 @@ void * readxiancheng(void *canshu)
 			ret=readline(sockio,&agemess.mess,MAX_BUFF);     //开始对该IO的数据进行读取
 			if(ret == -2)
 			{      
-				std::cout<<"接收到错误的消息包!"<<std::endl;
+				std::cout<<"read error message!"<<std::endl;
 				MYLOG.printflog("接收到错误的消息包!");
 
 				//如果数据发生错误，就需要对该IO进行处理
@@ -37,7 +37,7 @@ void * readxiancheng(void *canshu)
 			}
 			if(ret == -1)
 			{
-				std::cout<<"客户端退出"<<std::endl;
+				std::cout<<"Client Quit !"<<std::endl;
 				//如果收到客户端退出，就需要对该IO进行处理
 
 			}	
@@ -74,7 +74,7 @@ void ChuLiAgemess(struct message * message,int * io)
 
 	if (!mess_ti.ParseFromArray(message->buff, message->len))
 	{
-		std::cout << "反序列失败！" << std::endl;
+		std::cout << "Deserialization ChuLiAgemessClient Fali ！" << std::endl;
 		MYLOG.printflog("反序列失败！");     
 		return;
 	}

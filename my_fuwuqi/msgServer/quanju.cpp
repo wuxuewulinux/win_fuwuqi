@@ -40,4 +40,6 @@ txtlog MYLOG;                    //声明一个记录错误日志的全局类。
 
 timeku timelei;                //声明一个时间库类，专门管理所有的定时时间变化
 
+std::map<uint64_t,int> rUidMap;		//保存所有上线的列表
+
 

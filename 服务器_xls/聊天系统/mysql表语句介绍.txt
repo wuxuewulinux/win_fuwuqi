@@ -1,0 +1,79 @@
+
+1.创建一个 MsgLoginSuccess 存储过程SQL语句到数据库中
+
+delimiter $$
+create procedure MsgLoginSuccess(IN id int,IN tatus int)
+begin
+update msgServer set Status=tatus where Uid=id;
+select * from msgServer where Uid=id;
+end $$					//输入按回车就创建存储成功了
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+2.创建一个 MsgChangeStatus 存储过程SQL语句到数据库中
+
+
+delimiter $$
+create procedure MsgChangeStatus(IN id int,IN value int,IN type int)
+begin
+if (type = 1)
+then
+update msgServer set Grade=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 2)
+then
+update msgServer set Rank=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 3)
+then
+update msgServer set Status=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 4)
+then
+update msgServer set Vip=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 5)
+then
+update msgServer set Head=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 6)
+then
+update msgServer set ChatFrame=value where Uid=id;
+select * from msgServer where Uid=id;
+end if;
+end $$				//直接按回车键就可以创建成功了
+
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+
+
+show procedure status;			//查看mysql数据库所有存储过程
+
+drop procedure 存储过程名称;		//删除某个存储过程
+
+call 存储过程名称(传入参数);		//执行mysql存储过程如： call MsgLoginSuccess(1,2);  //1表示id,2表示tatus
+
+
+//创建一个聊天服务器表
+
+create table msgServer(Uid Bigint not null,Name nvarchar(10) not null,Grade int default 0,Rank int default 0,Status int default 0,Vip int default 0,Head int default 0,ChatFrame int default 0,Friend blob);
+
+
+
+聊天服务器数据库需要创建MsgLoginSuccess 存储过程和创建MsgChangeStatus 存储过程和一张 msgServer 表，SQL语句都在上面
+
+
+
+
+游戏数据库服务器需要 Server 表 SQL语句：
+
+
+create table Server(Uid int not null AUTO_INCREMENT primary key,zhanghu nvarchar(20) not null,mima nvarchar(20) not null,name nvarchar(10) not null,role blob not null);
+
+
+

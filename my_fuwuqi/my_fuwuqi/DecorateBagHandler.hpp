@@ -6,6 +6,17 @@
 #include "../proto/CSmsg.pb.h"
 #include "Handler.hpp"
 
+enum BagType
+{
+	VIP_TYPE = 1,
+	HEAD_TYPE = 2,
+	CHATFRAME_TYPE = 3,
+	ZHADAO_TYPE = 4,
+	DIPAN_TYPE = 5,
+	ZHANJI_TYPE = 6,
+	SKILL_TYPE = 7
+};
+
 class DecorateBagHandler : public IHandler
 {
 public:

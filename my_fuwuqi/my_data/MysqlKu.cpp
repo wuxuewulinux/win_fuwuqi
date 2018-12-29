@@ -1,5 +1,6 @@
 
 #include "MysqlKu.hpp"
+#include "quanju.hpp"
 
 MysqlKu::MysqlKu()
 {
@@ -30,6 +31,7 @@ int MysqlKu::InitMysql(string user,string mima,string databases,vector<string> &
 	if(table.size() == 0)
 	{
 		printf("Error connecting to table:");
+		MYLOG.printflog("InitMysql : Error connecting to table");
 		return -1;
 	}
 	mysql_init(&mysql);
@@ -59,6 +61,7 @@ int MysqlKu::Login(const string & zhanghu,const string & mima)
 	if(t)
 	{
 		printf("Error1 making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("Login : Error1 making query");
 	}
 
 	res = mysql_use_result(&mysql);
@@ -87,7 +90,7 @@ int MysqlKu::Login(const string & zhanghu,const string & mima)
 		mysql_free_result(res);
 		return 1;
 	}
-
+	mysql_free_result(res);
 	return 0;
 }
 
@@ -102,6 +105,7 @@ string MysqlKu::GetName(int Uid)
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("GetName : Error1 making query");
 	}
 
 	res = mysql_use_result(&mysql);
@@ -116,6 +120,7 @@ string MysqlKu::GetName(int Uid)
 		printf("\n");
 
 	}
+	mysql_free_result(res);
 	return "";
 }
 
@@ -130,8 +135,8 @@ string MysqlKu::GetDBRole(int Uid)
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("GetDBRole : Error1 making query");
 	}
-
 	res = mysql_use_result(&mysql);
 	while((row = mysql_fetch_row(res)))
 	{
@@ -144,6 +149,7 @@ string MysqlKu::GetDBRole(int Uid)
 		printf("\n");
 
 	}
+	mysql_free_result(res);
 	return "";
 }
 
@@ -158,7 +164,9 @@ void MysqlKu::ChangeDBRole(string & rDBRole,int Uid)
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("ChangeDBRole : Error1 making query");
 	}
+	res = mysql_use_result(&mysql);
 	mysql_free_result(res);
 
 	return;
@@ -175,6 +183,7 @@ int MysqlKu::Register(const string & zhanghu,const string & mingzi)
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("Register : Error1 making query");
 	}
 
 	res = mysql_use_result(&mysql);
@@ -184,12 +193,13 @@ int MysqlKu::Register(const string & zhanghu,const string & mingzi)
 		return 1;
 	}
 	mysql_free_result(res);
-	str="select * from "+table[0]+" where mima='";
+	str="select * from "+table[0]+" where name='";
 	str=str+mingzi+"';";
 	t=mysql_query(&mysql,str.c_str());
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("Register : Error1 making query");
 	}
 
 	res = mysql_use_result(&mysql);
@@ -242,8 +252,11 @@ void MysqlKu::InsertAccount(const string & zhanghu,const string & mingzi,const s
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("InsertAccount : Error1 making query");
 	}
+	res = mysql_use_result(&mysql);
 	mysql_free_result(res);
+	return;
 }
 
 
@@ -315,6 +328,7 @@ uint64_t MysqlKu::GetUid(const string & zhanghu)
 	if(t)
 	{
 		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("GetUid : Error1 making query");
 	}
 
 	res = mysql_use_result(&mysql);
@@ -331,6 +345,7 @@ uint64_t MysqlKu::GetUid(const string & zhanghu)
 			printf("\n");
 		}
 	}
+	mysql_free_result(res);
 	return 0;
 }
 

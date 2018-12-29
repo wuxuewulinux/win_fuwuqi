@@ -60,11 +60,9 @@ litenfd=socket_lei.socket_listcnfd();   //获取服务器监听IO
 if(EPOLLKU->Epoll_Creat() < 0)
 	return;
 EPOLLKU->Epoll_Add(litenfd);
-
 while(1)
 {
  EPOLLKU->Epoll_Wait(&socket_lei);   //epoll检测IO事件
-
 }
 
 return;

@@ -10,7 +10,21 @@
 #include<stdlib.h>
 #include<set>
 #include<vector>
+#include "../proto/CSmsg.pb.h"
 using namespace std;
+
+enum RoleBase			//人物基本信息字段在数据库中的序号
+{
+	UID = 0,
+	NAME = 1,
+	GRADE = 2,
+	RANK = 3,
+	STATUS = 4,
+	VIP = 5,
+	HEAD = 6,
+	CHATFRAME = 7,
+	FRIENDLIST = 8
+};
 
 #define MYSQLKU MysqlKu::Instance()
 
@@ -24,64 +38,53 @@ public:
 
 	int InitMysql(string user,string mima,string databases,vector<string> & tables);  //指定mysql的登录用户与密码与数据库名称
 
-	//判断客户端登录情况：函数返回1表示账户不存在，返回2表示密码错误，返回3表示登录成功.返回4表示用户重复登录
+	//修改聊天服务器某个用户的状态(登录成功)，(上线功能)
 
-	int Login(const string & zhanghu,const string & mima);  
+	void MsgLoginSuccess(uint64_t Uid,int Status,CSMsgLoginSuccessRsp * rRsp);
 
-	//调用mysql数据库返回该用户游戏名字 
+	//发送该用户上线状态给正在上线的好友，(上线功能)
 
-	string GetName(int Uid);
+	int SendRoleUpLine(struct RoleInfo* pRole,FriendList* pList,CSMsgLoginSuccessRsp * rRsp);
 
-	//获取role结构
+	//修改聊天服务器某个用户的状态(离线)，(离线功能)
 
-	string GetDBRole(int Uid);
+	void MsgQuitLine(uint64_t Uid,int Status);
 
-	//修改某个用户的role结构
+	//发送该用户离线状态给正在上线的好友，(离线功能)
 
-	void ChangeDBRole(string & rDBRole,int Uid);
+	int SendRoleQuitLine(struct RoleInfo* pRole,FriendList* pList);
 
-	//判断客户端注册情况：函数返回1表示账户存在，返回2表示名字存在，返回3表示注册成功.然后保存到mysql数据库
+	//添加新的好友就要把新的好友数组重新更新数据库
 
-	int Register(const string & zhanghu,const string & mingzi);
+	int UpFriendList(uint64_t Uid,FriendList* pList);
 
-	//调用mysql数据库返回该用户游戏积分
+	//添加好友成功功能
 
-	//int GetJiFen(const string & zhanghu);
+	int MsgSuccessAddFriend(uint64_t Uid,uint64_t Uid1,CSMsgSuccessAddFriendRsp * rRsp);
 
-	//插入注册成功的游戏客户到mysql中
+	//删除好友功能
 
-	void InsertAccount (const string & zhanghu,const string & mingzi,const string & mima,const string & DBRole);
+	void MsgDeleteFriend(uint64_t Uid,uint64_t Uid1);
 
-	//修改mysql数据库中的游戏用户积分
+	//更改好友列表为NULL状态
 
-	//void ChangeJiFen(int jifen,const string & zhanghu);
+	void ChangeFriendListNULL(uint64_t Uid);
 
-	//插入金币日志记录到数据库中
+	//查找玩家
 
-	//void InsertGoldLog(const struct goldlog & gold_log); 
+	int MsgFindName(const string & name,CSMsgFindNameRsp * pRsp);
 
-	//插入一个用户uid到uid容器中
+	//状态发生改变就要广播给所有玩家
 
-	void InsertUid(int userid){uid_rongqi.insert(userid);}
+	int SendRoleChangeStatus(struct RoleInfo* pRole,FriendList* pList);
 
-	//在uid容器查找是否存在该用户uid，为了判断是否重复登录
+	//玩家某个状态发生改变
 
-	bool FindUid(int userid);
+	int MsgChangeStatus(uint64_t Uid,uint32_t value,uint32_t type);
 
-	//从uid容器中删除一个用户uid
+	//插入注册成功的游戏客户到聊天服务器的mysql中
 
-	void PopUid(int userid);
-
-	//获取用户uid
-
-	uint64_t GetUid(const string & zhanghu);
-
-
-	//获取字段的属性测试
-
-	//void cheshi();
-
-	//void cheshitable(); 
+	void MsgInsertAccount(uint64_t Uid,const string & name);
 
 	~MysqlKu(){mysql_close(&mysql);}
 

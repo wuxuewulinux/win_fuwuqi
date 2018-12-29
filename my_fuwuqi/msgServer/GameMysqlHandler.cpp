@@ -3,6 +3,7 @@
 #include "GameMysqlWork.hpp"
 #include "sendclient.hpp"
 #include "quanju.hpp"
+#include "enterfunction.hpp"
 
 GameMysqlHandler::GameMysqlHandler()
 {
@@ -14,41 +15,76 @@ GameMysqlHandler::~GameMysqlHandler()
 
 }
 
-int GameMysqlHandler::OnServerMsg(const SSMsg& rSSMsg, int iFd)
+
+int GameMysqlHandler::OnClientMsg(const CSMsg& rCSMsg, int iFd)
+{
+
+
+	return 0;
+}
+
+
+
+int GameMysqlHandler::OnServerMsg(const CSMsg& rCSMsg, int iFd)
 {
 	int iRet = -1;
-	iRet = OnCheckSSMsg(rSSMsg, SS_MSGID_GameMysql);
+	iRet = OnCheckCSMsg(rCSMsg, CS_MSGID_Chat);
 	if (iRet < 0)
 	{
 		//日志输出
-		printf("RegisterLoginHandler OnCheckSSMsg : %d",iRet);
-		MYLOG.sprintf(BUFF,"RegisterLoginHandler CheckCSMsg : %d",iRet);
+		printf("GameMysqlHandler OnCheckSSMsg : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlHandler CheckCSMsg : %d",iRet);
 		return -1;
 	}
 	/*
 	上面的代码每个模块的Handler类的OnClientMsg函数都一样
 	*/
-	const SSRegisterLoginReq &req = rSSMsg.body().registerloginreq();
+	const CSChatReq &req = rCSMsg.body().chatreq();
 	switch (req.cmd())
 	{
-	case SSRegisterLoginCmd_Register:					//注册功能
+	case CSMsgServer_RegisterSuccess:					//聊天服务器用户注册成功功能
 		{
-			iRet = OnRegisterReq(rSSMsg, iFd);
+			iRet = OnMsgRegisterReq(rCSMsg, iFd);
 		}
 		break;
-	case SSRegisterLoginCmd_Login:						//登陆功能
+	case CSMsgServer_LoginSuccess:						//聊天服务器用户登陆功能
 		{
-			iRet = OnLoginReq(rSSMsg, iFd);
+			iRet = OnMsgLoginReq(rCSMsg, iFd);
 		}
 		break;
-	case SSRegisterLoginCmd_Quit:						//退出游戏功能
+	case CSMsgServer_Quit:								//聊天服务器退出(离线)游戏功能
 		{
-			iRet = OnQuitReq(rSSMsg, iFd);
+			iRet = OnMsgQuitReq(rCSMsg, iFd);
 		}
 		break;
-	case SSRegisterLoginCmd_UpdateDatabase:						//更新数据库功能
+	case CSMsgServer_AskAddFriend:						//聊天服务器玩家请求添加好友
 		{
-			iRet = OnUpdateDatabaseReq(rSSMsg, iFd);
+			iRet = OnAskAddFriendReq(rCSMsg, iFd);
+		}
+		break;
+	case CSMsgServer_SuccessAddFriend:					//聊天服务器玩家成功添加好友
+		{
+			iRet = OnSuccessAddFriendReq(rCSMsg, iFd);
+		}
+		break;
+	case CSMsgServer_DeleteFriend:						//聊天服务器玩家删除好友
+		{
+			iRet = OnDeleteFriendReq(rCSMsg, iFd);
+		}
+		break;
+	case CSMsgServer_SendChat:							//聊天服务器玩家聊天请求
+		{
+			iRet = OnSendChatReq(rCSMsg, iFd);
+		}
+		break;
+	case CSMsgServer_FindName:							//聊天服务器玩家请求按名称查找用户
+		{
+			iRet = OnFindNameReq(rCSMsg, iFd);
+		}
+		break;
+	case CSMsgServer_ChangeStatus:						//聊天服务器玩家请求改变某个状态
+		{
+			iRet = OnChangeStatusReq(rCSMsg, iFd);
 		}
 		break;
 	default:
@@ -57,53 +93,84 @@ int GameMysqlHandler::OnServerMsg(const SSMsg& rSSMsg, int iFd)
 	if (iRet < 0)
 	{
 		//判断功能逻辑是否正确，不可能会出现负数，出现负数的原因可能是指针为空，或者数据发生错误
-		printf("RegisterLoginHandler error : %d",iRet);
-		MYLOG.sprintf(BUFF,"RegisterLoginHandler error : %d",iRet);
+		printf("GameMysqlHandler error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlHandler error : %d",iRet);
 	}
 	
 	return 0;
 }
 
 
-void* GameMysqlHandler::OnSSMsg(SSMsg& rMsg, uint64_t Uid, SSMsgID eMsgId, int CmdType)
+void* GameMysqlHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int CmdType)
 {
-	SSMsgHead * pHead = rMsg.mutable_head();
+	CSMsgHead * pHead = rMsg.mutable_head();
 	if (!pHead)
 	{
 		return NULL;
 	}
 	pHead->set_uid(Uid);
 	pHead->set_msgid(eMsgId);
-	SSMsgBody * pbody = rMsg.mutable_body();
+	CSMsgBody * pbody = rMsg.mutable_body();
 	if (!pbody)
 	{
 		return NULL;
 	}
-	SSRegisterLoginRsp * pReq = pbody->mutable_registerloginrsp();
+	CSChatRsp * pReq = pbody->mutable_chatrsp();
 	if (!pReq)
 	{
 		return NULL;
 	}
-	SSRegisterLoginRspParam * pReqParam = pReq->mutable_rspparam();  //注：每个模块只要判断到该层次结构就算结束判断了，就开始进行对应指针判断了
+	CSChatRspParam * pReqParam = pReq->mutable_rspparam();  //注：每个模块只要判断到该层次结构就算结束判断了，就开始进行对应指针判断了
 	if (!pReqParam)
 	{
 		return NULL;
 	}
-	//从这里开始增加结构指针就可以了。
-
-	SSLoginRsp * pLoginRsp = pReqParam->mutable_loginrsp();				//获取登陆结构指针内存
-	SSRegisterRsp * pRegisterRsp = pReqParam->mutable_registerrsp();	//获取注册结构指针内存
-
-	/////////////////////////
-
+	
 	//进行判断获取对应的内存指针出去
-	if (CmdType == SSRegisterLoginCmd_Register)
+	if (CmdType == CSMsgServer_FriendLine)
 	{
-		return (void*)pRegisterRsp;
+		CSMsgRoleInfo * pRoleInfoRsp = pReqParam->mutable_roleinfo();
+		return (void*)pRoleInfoRsp;
 	}
-	else if (CmdType == SSRegisterLoginCmd_Login)
+	else if (CmdType == CSMsgServer_LoginSuccess)
 	{
-		return (void*)pLoginRsp;
+		CSMsgLoginSuccessRsp* pFriendRoleInfo = pReqParam->mutable_msgloginsuccess();
+		return (void*)pFriendRoleInfo;
+	}
+	else if (CmdType == CSMsgServer_Quit)
+	{
+		CSMsgRoleInfo * pRoleQuit = pReqParam->mutable_rolequit();
+		return (void*)pRoleQuit;
+	}
+	else if (CmdType == CSMsgServer_AskAddFriend)
+	{
+		CSMsgAskAddFriendRsp * pAskAddFriend = pReqParam->mutable_askaddfriendrsp();
+		return (void*)pAskAddFriend;
+	}
+	else if (CmdType == CSMsgServer_SuccessAddFriend)
+	{
+		CSMsgSuccessAddFriendRsp * pSuccessAddFriend = pReqParam->mutable_successaddfriendrsp();
+		return (void*)pSuccessAddFriend;
+	}
+	else if (CmdType == CSMsgServer_DeleteFriend)
+	{
+		CSMsgDeleteFriendRsp * pDeleteFriend = pReqParam->mutable_deletefriendrsp();
+		return (void*)pDeleteFriend;
+	}
+	else if (CmdType == CSMsgServer_SendChat)
+	{
+		CSMsgSendChatRsp * pSendChat = pReqParam->mutable_sendchatrsp();
+		return (void*)pSendChat;
+	}
+	else if (CmdType == CSMsgServer_FindName)
+	{
+		CSMsgFindNameRsp * pFindName = pReqParam->mutable_findnamersp();
+		return (void*)pFindName;
+	}
+	else if (CmdType == CSMsgServer_ChangeStatus)
+	{
+		CSMsgChangeStatusRsp * pChangeStatus = pReqParam->mutable_changestatusrsp();
+		return (void*)pChangeStatus;
 	}
 	////////
 	return NULL;
@@ -111,13 +178,13 @@ void* GameMysqlHandler::OnSSMsg(SSMsg& rMsg, uint64_t Uid, SSMsgID eMsgId, int C
 }
 
 
-int GameMysqlHandler::OnCheckSSMsg(const SSMsg& rMsg, SSMsgID eMsgId)
+int GameMysqlHandler::OnCheckCSMsg(const CSMsg& rMsg, CSMsgID eMsgId)
 {
 	if ( !rMsg.has_head())
 	{
 		return -1;
 	}
-	const SSMsgHead& rHead= rMsg.head();
+	const CSMsgHead& rHead= rMsg.head();
 	if ( ! (rHead.has_uid()) || ! rHead.has_msgid())
 	{
 		return -2;
@@ -130,8 +197,8 @@ int GameMysqlHandler::OnCheckSSMsg(const SSMsg& rMsg, SSMsgID eMsgId)
 	{
 		return -4;
 	}
-	const SSMsgBody& rBody = rMsg.body();
-	const SSRegisterLoginReq& rTmp = rBody.registerloginreq();
+	const CSMsgBody& rBody = rMsg.body();
+	const CSChatReq& rTmp = rBody.chatreq();
 	if ( !(rTmp.has_cmd()) || !(rTmp.has_reqparam()) )
 	{
 		return -5;
@@ -144,87 +211,328 @@ int GameMysqlHandler::OnCheckSSMsg(const SSMsg& rMsg, SSMsgID eMsgId)
 
 
 
-int GameMysqlHandler::OnRegisterReq(const SSMsg& rSSMsg, int iFd)
+int GameMysqlHandler::OnMsgRegisterReq(const CSMsg& rCSMsg, int iFd)
 {
-	const SSRegisterReq & rRegisterReq = rSSMsg.body().registerloginreq().reqparam().registerreq();
-
-	SSMsg oSSMsg;
-	//获取要给客户端的数据内存地址
-	SSRegisterRsp* pRegisterRsp = static_cast<SSRegisterRsp*>(OnSSMsg(oSSMsg, rSSMsg.head().uid(), SS_MSGID_GameMysql, SSRegisterLoginCmd_Register)); 
-	HANDCHECH_P(pRegisterRsp,-1);
+	const CSMsgRegisterSuccessReq & rRegisterReq = rCSMsg.body().chatreq().reqparam().registersuccessreq();
 
 	//开始执行功能逻辑
-	int iRet = GameMysqlWork::Register(rRegisterReq,pRegisterRsp);
+	int iRet = GameMysqlWork::MsgRegister(rRegisterReq);
 	//如果是小于0证明数据错误，不可以发送,输入日志里
 	if (iRet < 0)
 	{
-		printf("RegisterLoginWork Register error : %d",iRet);
-		MYLOG.sprintf(BUFF,"RegisterLoginWork Register error : %d",iRet);
+		printf("GameMysqlWork MsgRegister error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork MsgRegister error : %d",iRet);
 		return -3;
 	}
-	//开始发送数据给客户端
-	SendServer(iFd,&oSSMsg);
+
 	return 0;
 
 }
 
 
 
-int GameMysqlHandler::OnLoginReq(const SSMsg& rSSMsg, int iFd)
+int GameMysqlHandler::OnMsgLoginReq(const CSMsg& rCSMsg, int iFd)
 {
-	const SSLoginReq & rLoginReq = rSSMsg.body().registerloginreq().reqparam().loginreq();
+	const CSMsgLoginSuccessReq & rLoginReq = rCSMsg.body().chatreq().reqparam().loginsuccessreq();
+	CSMsg oCSMsg;
+	CSMsgLoginSuccessRsp* pFriendInfoListRsp = static_cast<CSMsgLoginSuccessRsp*>(OnCSMsg(oCSMsg, rLoginReq.uid(), CS_MSGID_Chat, CSMsgServer_LoginSuccess)); 
+	HANDCHECH_P(pFriendInfoListRsp,-1);
 
-	SSMsg oSSMsg;
-	SSLoginRsp* pLoginRsp = static_cast<SSLoginRsp*>(OnSSMsg(oSSMsg,rSSMsg.head().uid(), SS_MSGID_GameMysql, SSRegisterLoginCmd_Login)); 
-	HANDCHECH_P(pLoginRsp,-1);
-
-	int iRet = GameMysqlWork::Login(rLoginReq,pLoginRsp);
+	int iRet = GameMysqlWork::MsgLogin(rLoginReq,pFriendInfoListRsp);
 
 	if (iRet < 0)
 	{
-		printf("RegisterLoginWork  Login error : %d",iRet);
-		MYLOG.sprintf(BUFF,"RegisterLoginWork Login error : %d",iRet);
+		printf("GameMysqlWork  MsgLogin error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork  MsgLogin error : %d",iRet);
 		return -3;
 	}
-	SendServer(iFd,&oSSMsg);
+	//发送协议给客户端
+	int ConnIo = GetRoleIo(rLoginReq.uid());
+	if (ConnIo != 0)
+	{
+		SendClient(ConnIo,&oCSMsg);
+	}
+
 	return 0;
 
 }
 
 
-int GameMysqlHandler::OnQuitReq(const SSMsg& rSSMsg, int iFd)
+int GameMysqlHandler::OnMsgQuitReq(const CSMsg& rCSMsg, int iFd)
 {
-	const SSQuitReq & rQuitReq = rSSMsg.body().registerloginreq().reqparam().quitreq();
-	//序列化role数据然后保存在数据库中
-	int len = rQuitReq.ByteSize();
-	char buff[len+1];
-	if (!rQuitReq.SerializeToArray(buff,len)) 
-	{ 
-		std::cout << "OnQuitReq serialize Fail!" << std::endl; 
-		MYLOG.printflog("OnQuitReq serialize Fail！"); 
-		return -1;
+	const CSMsgQuitReq & rQuitReq = rCSMsg.body().chatreq().reqparam().msgquitreq();
+
+	int iRet = GameMysqlWork::MsgQuit(rQuitReq);
+
+	if (iRet < 0)
+	{
+		printf("GameMysqlWork  MsgQuit error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork  MsgQuit error : %d",iRet);
+		return -3;
 	}
-	std::string sRole(buff);
-	MYSQLKU->ChangeDBRole(sRole,(int)rSSMsg.head().uid());
-	MYSQLKU->PopUid((int)rSSMsg.head().uid());									//从容器中把上线的UID给去除出去
+	
 	return 0;
 }
 
 
-int GameMysqlHandler::OnUpdateDatabaseReq(const SSMsg& rSSMsg, int iFd)
+int GameMysqlHandler::OnAskAddFriendReq(const CSMsg& rCSMsg, int iFd)
 {
-	const SSQuitReq & rQuitReq = rSSMsg.body().registerloginreq().reqparam().quitreq();
-	//序列化role数据然后保存在数据库中
-	int len = rQuitReq.ByteSize();
-	char buff[len+1];
-	if (!rQuitReq.SerializeToArray(buff,len)) 
-	{ 
-		std::cout << "OnQuitReq serialize Fail!" << std::endl; 
-		MYLOG.printflog("OnQuitReq serialize Fail！"); 
-		return -1;
+	const CSMsgAskAddFriendReq & Req = rCSMsg.body().chatreq().reqparam().askaddfriendreq();
+
+	CSMsg oCSMsg;
+	CSMsgAskAddFriendRsp* Rsp = static_cast<CSMsgAskAddFriendRsp*>(OnCSMsg(oCSMsg, Req.uid(), CS_MSGID_Chat, CSMsgServer_AskAddFriend));
+	HANDCHECH_P(Rsp,-1);
+
+	int iRet = GameMysqlWork::MsgAskAddFriendReq(Req,Rsp,rCSMsg.head().uid());
+
+	if (iRet < 0)
+	{
+		printf("GameMysqlWork  MsgAskAddFriendReq error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork  MsgAskAddFriendReq error : %d",iRet);
+		return -3;
 	}
-	std::string sRole(buff);
-	MYSQLKU->ChangeDBRole(sRole,(int)rSSMsg.head().uid());
+	int SockIo = GetRoleIo(Req.uid());
+	if (SockIo != 0)
+	{
+		SendClient(SockIo,&oCSMsg);
+	}
+	return 0;
+}
+
+
+int GameMysqlHandler::OnSendRoleUpLine(RoleInfo * pRoleInfo,uint64_t rUid)
+{
+	HANDCHECH_P(pRoleInfo,-1);
+	CSMsg oCSMsg;
+	CSMsgRoleInfo* pRoleInfoRsp = static_cast<CSMsgRoleInfo*>(OnCSMsg(oCSMsg, rUid, CS_MSGID_Chat, CSMsgServer_FriendLine)); 
+	HANDCHECH_P(pRoleInfoRsp,-1);
+	pRoleInfoRsp->set_name(pRoleInfo->Name);
+	pRoleInfoRsp->set_uid(pRoleInfo->Uid);
+	pRoleInfoRsp->set_grade(pRoleInfo->Grade);
+	pRoleInfoRsp->set_status(pRoleInfo->Rank);
+	pRoleInfoRsp->set_vip(pRoleInfo->Vip);
+	pRoleInfoRsp->set_head(pRoleInfo->Head);
+	pRoleInfoRsp->set_chatframe(pRoleInfo->ChatFrame);
+	int ConnIo = GetRoleIo(rUid);
+	if (ConnIo != 0)
+	{
+		SendClient(ConnIo,&oCSMsg);
+	}
+
+	return 0;
+}
+
+
+int GameMysqlHandler::OnSendRoleQuitLine(RoleInfo * pRoleInfo,uint64_t rUid)
+{
+	HANDCHECH_P(pRoleInfo,-1);
+	CSMsg oCSMsg;
+	CSMsgRoleInfo* pRoleInfoRsp = static_cast<CSMsgRoleInfo*>(OnCSMsg(oCSMsg, rUid, CS_MSGID_Chat, CSMsgServer_Quit)); 
+	HANDCHECH_P(pRoleInfoRsp,-1);
+	pRoleInfoRsp->set_uid(pRoleInfo->Uid);
+	pRoleInfoRsp->set_name(pRoleInfo->Name);
+	pRoleInfoRsp->set_grade(pRoleInfo->Grade);
+	pRoleInfoRsp->set_status(pRoleInfo->Rank);
+	pRoleInfoRsp->set_vip(pRoleInfo->Vip);
+	pRoleInfoRsp->set_head(pRoleInfo->Head);
+	pRoleInfoRsp->set_chatframe(pRoleInfo->ChatFrame);
+	int ConnIo = GetRoleIo(rUid);
+	if (ConnIo != 0)
+	{
+		SendClient(ConnIo,&oCSMsg);
+	}
+
+	return 0;
+}
+
+
+
+int GameMysqlHandler::OnSendChangeStatus(RoleInfo * pRoleInfo,uint64_t rUid)
+{
+	HANDCHECH_P(pRoleInfo,-1);
+	CSMsg oCSMsg;
+	CSMsgChangeStatusRsp* pChangeStatusRsp = static_cast<CSMsgChangeStatusRsp*>(OnCSMsg(oCSMsg, rUid, CS_MSGID_Chat, CSMsgServer_ChangeStatus)); 
+	HANDCHECH_P(pChangeStatusRsp,-1);
+	CSMsgRoleInfo* pRoleInfoRsp = pChangeStatusRsp->mutable_roleinfo();
+	HANDCHECH_P(pRoleInfoRsp,-2);
+	pRoleInfoRsp->set_uid(pRoleInfo->Uid);
+	pRoleInfoRsp->set_name(pRoleInfo->Name);
+	pRoleInfoRsp->set_grade(pRoleInfo->Grade);
+	pRoleInfoRsp->set_status(pRoleInfo->Rank);
+	pRoleInfoRsp->set_vip(pRoleInfo->Vip);
+	pRoleInfoRsp->set_head(pRoleInfo->Head);
+	pRoleInfoRsp->set_chatframe(pRoleInfo->ChatFrame);
+	int ConnIo = GetRoleIo(rUid);
+	if (ConnIo != 0)
+	{
+		SendClient(ConnIo,&oCSMsg);
+	}
+	return 0;
+}
+
+
+
+int GameMysqlHandler::OnSuccessAddFriendReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSMsgSuccessAddFriendReq & Req = rCSMsg.body().chatreq().reqparam().successaddfriendreq();
+
+	//发给第一个玩家好友
+	{
+		CSMsg oCSMsg;
+		CSMsgSuccessAddFriendRsp* Rsp = static_cast<CSMsgSuccessAddFriendRsp*>(OnCSMsg(oCSMsg, Req.uid2(), CS_MSGID_Chat, CSMsgServer_SuccessAddFriend));
+		HANDCHECH_P(Rsp,-1);
+		int iRet = GameMysqlWork::MsgSuccessAddOneFriendReq(Req,Rsp);
+
+		if (iRet < 0)
+		{
+			printf("GameMysqlWork  MsgSuccessAddOneFriendReq error : %d",iRet);
+			MYLOG.sprintf(BUFF,"GameMysqlWork  MsgSuccessAddOneFriendReq error : %d",iRet);
+			return -3;
+		}
+		int SockIo = GetRoleIo(Req.uid2());
+		if (SockIo != 0)
+		{
+			SendClient(SockIo,&oCSMsg);
+		}
+	}
+	//发给第二个玩家好友
+	{
+		CSMsg oCSMsg;
+		CSMsgSuccessAddFriendRsp* Rsp = static_cast<CSMsgSuccessAddFriendRsp*>(OnCSMsg(oCSMsg, Req.uid1(), CS_MSGID_Chat, CSMsgServer_SuccessAddFriend));
+		HANDCHECH_P(Rsp,-1);
+		int iRet = GameMysqlWork::MsgSuccessAddTwoFriendReq(Req,Rsp);
+
+		if (iRet < 0)
+		{
+			printf("GameMysqlWork  MsgSuccessAddTwoFriendReq error : %d",iRet);
+			MYLOG.sprintf(BUFF,"GameMysqlWork  MsgSuccessAddTwoFriendReq error : %d",iRet);
+			return -3;
+		}
+		int SockIo = GetRoleIo(Req.uid1());
+		if (SockIo != 0)
+		{
+			SendClient(SockIo,&oCSMsg);
+		}
+	}
+
+	return 0;
+}
+
+
+
+int GameMysqlHandler::OnDeleteFriendReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSMsgDeleteFriendReq & Req = rCSMsg.body().chatreq().reqparam().deletefriendreq();
+
+	//删除第一个玩家好友
+	{
+		CSMsg oCSMsg;
+		CSMsgDeleteFriendRsp* Rsp = static_cast<CSMsgDeleteFriendRsp*>(OnCSMsg(oCSMsg, Req.uid1(), CS_MSGID_Chat, CSMsgServer_DeleteFriend));
+		HANDCHECH_P(Rsp,-1);
+		int iRet = GameMysqlWork::MsgDeleteOneFriendReq(Req,Rsp);
+
+		if (iRet < 0)
+		{
+			printf("GameMysqlWork  MsgDeleteOneFriendReq error : %d",iRet);
+			MYLOG.sprintf(BUFF,"GameMysqlWork  MsgDeleteOneFriendReq error : %d",iRet);
+			return -3;
+		}
+		int SockIo = GetRoleIo(Req.uid1());
+		if (SockIo != 0)
+		{
+			SendClient(SockIo,&oCSMsg);
+		}
+	}
+	//删除第二个玩家好友
+	{
+		CSMsg oCSMsg;
+		CSMsgDeleteFriendRsp* Rsp = static_cast<CSMsgDeleteFriendRsp*>(OnCSMsg(oCSMsg, Req.uid2(), CS_MSGID_Chat, CSMsgServer_DeleteFriend));
+		HANDCHECH_P(Rsp,-1);
+		int iRet = GameMysqlWork::MsgDeleteTwoFriendReq(Req,Rsp);
+
+		if (iRet < 0)
+		{
+			printf("GameMysqlWork  MsgDeleteTwoFriendReq error : %d",iRet);
+			MYLOG.sprintf(BUFF,"GameMysqlWork  MsgDeleteTwoFriendReq error : %d",iRet);
+			return -3;
+		}
+		int SockIo = GetRoleIo(Req.uid2());
+		if (SockIo != 0)
+		{
+			SendClient(SockIo,&oCSMsg);
+		}
+	}
+
+	return 0;
+}
+
+
+
+int GameMysqlHandler::OnSendChatReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSMsgSendChatReq & Req = rCSMsg.body().chatreq().reqparam().sendchatreq();
+
+	CSMsg oCSMsg;
+	CSMsgSendChatRsp* Rsp = static_cast<CSMsgSendChatRsp*>(OnCSMsg(oCSMsg, Req.uid2(), CS_MSGID_Chat, CSMsgServer_SendChat));
+	HANDCHECH_P(Rsp,-1);
+
+	int iRet = GameMysqlWork::MsgSendChatReq(Req,Rsp);
+
+	if (iRet < 0)
+	{
+		printf("GameMysqlWork  MsgSendChatReq error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork  MsgSendChatReq error : %d",iRet);
+		return -3;
+	}
+	int SockIo = GetRoleIo(Req.uid2());
+	if (SockIo != 0)
+	{
+		SendClient(SockIo,&oCSMsg);
+	}
+	
+	return 0;
+}
+
+
+
+
+int GameMysqlHandler::OnFindNameReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSMsgFindNameReq & Req = rCSMsg.body().chatreq().reqparam().findnamereq();
+
+	CSMsg oCSMsg;
+	CSMsgFindNameRsp* Rsp = static_cast<CSMsgFindNameRsp*>(OnCSMsg(oCSMsg, rCSMsg.head().uid(), CS_MSGID_Chat, CSMsgServer_FindName));
+	HANDCHECH_P(Rsp,-1);
+
+	int iRet = GameMysqlWork::MsgFindNameReq(Req,Rsp);
+
+	if (iRet < 0)
+	{
+		printf("GameMysqlWork  MsgFindNameReq error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork  MsgFindNameReq error : %d",iRet);
+		return -3;
+	}
+	if (iRet == 0)
+	{
+		SendClient(iFd,&oCSMsg);
+	}
+
+	return 0;
+}
+
+
+int GameMysqlHandler::OnChangeStatusReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSMsgChangeStatusReq & Req = rCSMsg.body().chatreq().reqparam().changestatusreq();
+
+	int iRet = GameMysqlWork::MsgChangeStatusReq(Req);
+
+	if (iRet < 0)
+	{
+		printf("GameMysqlWork  MsgChangeStatusReq error : %d",iRet);
+		MYLOG.sprintf(BUFF,"GameMysqlWork  MsgChangeStatusReq error : %d",iRet);
+		return -3;
+	}
 	
 	return 0;
 }

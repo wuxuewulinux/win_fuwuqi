@@ -5,6 +5,7 @@
 #include "RegisterLoginHandler.hpp"
 #include "BagHandler.hpp"
 #include "DecorateBagHandler.hpp"
+#include "ChatHandler.hpp"
 
 #define HANDLERLIST CHandlerList::Instance()
 
@@ -36,6 +37,7 @@ private:
 	static RegisterLoginHandler m_oRegisterLoginHandler;					//登陆注册模块handler
 	static CBagHandler m_oBagHandler;										//背包模块handler
 	static DecorateBagHandler m_oDecorateBagHandler;						//装饰背包handler
+	static ChatHandler m_oChatHandler;										//聊天模块Handler
 
 };
 

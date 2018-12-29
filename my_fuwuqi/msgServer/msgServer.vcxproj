@@ -85,7 +85,9 @@
     <ClInclude Include="xmlnodeconfig.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="enterfunction.cpp" />
     <ClCompile Include="epoll_ku.cpp" />
+    <ClCompile Include="GameMysqlHandler.cpp" />
     <ClCompile Include="GameMysqlWork.cpp" />
     <ClCompile Include="gateway.cpp" />
     <ClCompile Include="Handler.cpp" />

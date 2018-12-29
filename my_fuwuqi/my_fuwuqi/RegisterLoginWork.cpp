@@ -64,6 +64,7 @@ int RegisterLoginWork::QuitReq(CRoleObj* pRoleObj,SSQuitReq* pReq,int Fd,uint64_
 int RegisterLoginWork::RegisterRsp(const SSRegisterRsp& rRsp,CSRegisterRsp* pRsp)
 {
 	pRsp->set_type(rRsp.type());
+
 	return 0;
 }
 

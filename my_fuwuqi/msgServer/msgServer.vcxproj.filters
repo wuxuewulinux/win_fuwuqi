@@ -140,6 +140,12 @@
     <ClCompile Include="GameMysqlWork.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="GameMysqlHandler.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="enterfunction.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="server_mysql.xml">

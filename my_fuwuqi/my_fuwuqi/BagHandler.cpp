@@ -2,6 +2,7 @@
 #include "enterfunction.hpp"
 #include "sendclient.hpp"
 #include "BagWork.hpp"
+#include "UpdateData.hpp"
 
 CBagHandler::CBagHandler()
 {
@@ -69,23 +70,13 @@ void* CBagHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int CmdTyp
 		return NULL;
 	}
 	//从这里开始增加结构指针就可以了。
-
-	CSBagFetchRsp * pFetchRsp = pReqParam->mutable_fetchrsp();				//获取界面展示结构指针内存
-	//CSRegisterRsp * pRegisterRsp = pReqParam->mutable_registerrsp();		
-
-	/////////////////////////
-
 	//进行判断获取对应的内存指针出去
 	if (CmdType == CSBagCmd_Fetch)
 	{
+		CSBagFetchRsp * pFetchRsp = pReqParam->mutable_fetchrsp();
 		return (void*)pFetchRsp;
 	}
-	/*
-	else if (CmdType == CSBagCmd_Use)
-	{
-		return (void*)pLoginRsp;
-	}
-	*/
+	
 	return NULL;
 }
 

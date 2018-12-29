@@ -12,6 +12,7 @@ enum SSRegisterLoginCmd
 	SSRegisterLoginCmd_Login = 2;	  			//登录功能
 	SSRegisterLoginCmd_Quit = 3;				//退出游戏功能
 	SSRegisterLoginCmd_UpdateDatabase = 4;		//更新数据库
+	
 }
 
 message SSLoginReq								//登陆		
@@ -36,12 +37,15 @@ message SSRegisterReq								//注册
 message SSRegisterRsp								//注册 		
 {
 	optional uint32 type = 1;					//返回：1表示账号已存在，2表示名称已存在，3表示注册成功
+	optional uint64 Uid = 2;					//返回Uid（聊天服务器会用到）
+	optional string name = 3;					//名称
 }
 
 message SSQuitReq								//退出功能 和 数据库更新功能   共享该数据结构
 {
 	optional DBRoleInfo Role = 1;				//角色结构体	
 }
+
 
 
 message SSRegisterLoginReqParam
@@ -52,6 +56,7 @@ message SSRegisterLoginReqParam
 	optional SSLoginReq LoginReq = 1;
 	optional SSRegisterReq RegisterReq = 2;
 	optional SSQuitReq QuitReq = 3;
+	
 }
 
 
@@ -61,6 +66,7 @@ message SSRegisterLoginRspParam
    //该模块所有子功能的数据都保存在这里，（客户端需要的数据)
 	optional SSLoginRsp LoginRsp = 1;
 	optional SSRegisterRsp RegisterRsp = 2;
+	
 }
 
 
@@ -85,7 +91,7 @@ enum SSMsgID
 	
 	SS_MSGID_MIN = 1000;
 	
-	SS_MSGID_GameMysql = 1001; 	//游戏服务器与数据库服务器通信的模块，该模块包含所有功能
+	SS_MSGID_GameMysql = 1001; 	//游戏服务器与数据库服务器通信和聊天服务器通信的模块，该模块包含所有功能.
 	
 	//如果还有别的模块就这里进行扩展
 	

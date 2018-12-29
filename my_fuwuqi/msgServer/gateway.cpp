@@ -13,12 +13,12 @@ void gateway()
 {
 int litenfd;
 //初始化游戏模块 日志
-if(!LogInit("/home/wuxuewu/datamysql/"))
+if(!LogInit("/home/wuxuewu/msgServer/"))
 {
 return;
 }
 //初始化记录错误信息的日志
-if(!MYLOG.Init("/home/wuxuewu/datamysql/log/error.txt"))
+if(!MYLOG.Init("/home/wuxuewu/msgServer/log/error.txt"))
 {
 std::cout<<"error log create fail !"<<std::endl;
 return;

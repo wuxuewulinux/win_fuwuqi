@@ -89,20 +89,16 @@ void* GameMysqlHandler::OnSSMsg(SSMsg& rMsg, uint64_t Uid, SSMsgID eMsgId, int C
 	{
 		return NULL;
 	}
-	//从这里开始增加结构指针就可以了。
-
-	SSLoginRsp * pLoginRsp = pReqParam->mutable_loginrsp();				//获取登陆结构指针内存
-	SSRegisterRsp * pRegisterRsp = pReqParam->mutable_registerrsp();	//获取注册结构指针内存
-
-	/////////////////////////
-
+	
 	//进行判断获取对应的内存指针出去
 	if (CmdType == SSRegisterLoginCmd_Register)
 	{
+		SSRegisterRsp * pRegisterRsp = pReqParam->mutable_registerrsp();
 		return (void*)pRegisterRsp;
 	}
 	else if (CmdType == SSRegisterLoginCmd_Login)
 	{
+		SSLoginRsp * pLoginRsp = pReqParam->mutable_loginrsp();
 		return (void*)pLoginRsp;
 	}
 	////////

@@ -3,6 +3,8 @@
 #include "RegisterLoginWork.hpp"
 #include "enterfunction.hpp"
 #include "sendclient.hpp"
+#include "ChatHandler.hpp"
+#include "SocketMsgClient.hpp"
 
 RegisterLoginHandler::RegisterLoginHandler()
 {
@@ -101,20 +103,17 @@ void* RegisterLoginHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, i
 	{
 		return NULL;
 	}
+
 	//从这里开始增加结构指针就可以了。
-
-	CSLoginRsp * pLoginRsp = pReqParam->mutable_loginrsp();				//获取登陆结构指针内存
-	CSRegisterRsp * pRegisterRsp = pReqParam->mutable_registerrsp();	//获取注册结构指针内存
-
-	/////////////////////////
-
 	//进行判断获取对应的内存指针出去
 	if (CmdType == CSRegisterLoginCmd_Register)
 	{
+		CSRegisterRsp * pRegisterRsp = pReqParam->mutable_registerrsp();
 		return (void*)pRegisterRsp;
 	}
 	else if (CmdType == CSRegisterLoginCmd_Login)
 	{
+		CSLoginRsp * pLoginRsp = pReqParam->mutable_loginrsp();
 		return (void*)pLoginRsp;
 	}
 	////////
@@ -147,25 +146,23 @@ void* RegisterLoginHandler::OnSSMsg(SSMsg& rMsg, uint64_t Uid, SSMsgID eMsgId, i
 		return NULL;
 	}
 	//从这里开始增加结构指针就可以了。
-
-	SSLoginReq * pLoginReq = pReqParam->mutable_loginreq();				//获取登陆结构指针内存
-	SSRegisterReq * pRegisterReq = pReqParam->mutable_registerreq();	//获取注册结构指针内存
-	SSQuitReq * pQuitReq = pReqParam->mutable_quitreq();				//获取退出结构指针内存
-	/////////////////////////
-
 	//进行判断获取对应的内存指针出去
 	if (CmdType == SSRegisterLoginCmd_Register)
 	{
+		SSRegisterReq * pRegisterReq = pReqParam->mutable_registerreq();
 		return (void*)pRegisterReq;
 	}
 	else if (CmdType == SSRegisterLoginCmd_Login)
 	{
+		SSLoginReq * pLoginReq = pReqParam->mutable_loginreq();
 		return (void*)pLoginReq;
 	}
 	else if (CmdType == SSRegisterLoginCmd_Quit)
 	{
+		SSQuitReq * pQuitReq = pReqParam->mutable_quitreq();
 		return (void*)pQuitReq;
 	}
+	
 	////////
 	return NULL;
 }
@@ -350,6 +347,15 @@ int RegisterLoginHandler::OnQuitReq(const CSMsg& rCSMsg, int iFd)
 	
 	int iRet = RegisterLoginWork::QuitReq(pRoleObj,pQuitReq,iFd,rCSMsg.head().uid());
 	
+	{
+		//向聊天服务器发送用户离线协议
+		CSMsg oCSMsg;
+		CSMsgQuitReq* pMsgRsp = static_cast<CSMsgQuitReq*>(ChatHandler::OnCSMsg(oCSMsg, 0, CS_MSGID_Chat, CSMsgServer_Quit)); 
+		HANDCHECH_P(pMsgRsp,-2);
+		pMsgRsp->set_uid(rCSMsg.head().uid());
+		SendClient(MSGCLIENT->GetSocketIo(),&oCSMsg);
+	}
+
 	if (iRet == 0)
 	{
 		SendServer(DBCLIENT->GetSocketIo(),&oSSMsg);
@@ -368,12 +374,16 @@ int RegisterLoginHandler::OnRegisterRsp(const SSMsg& rSSMsg)
 	//获取要给客户端的数据内存地址
 	CSRegisterRsp* pRegisterRsp = static_cast<CSRegisterRsp*>(OnCSMsg(oCSMsg, rSSMsg.head().uid(), CS_MSGID_RegisterLogin, CSRegisterLoginCmd_Register)); 
 	HANDCHECH_P(pRegisterRsp,-1);
-	/*
-	获取该客户端的Role类 注册还没有role类的出现
-	CRoleObj* pRoleObj = GetRole(rCSMsg.head().uid());
-	HANDCHECH_P(pRoleObj,-2);
-	*/
-	//开始执行功能逻辑
+	//注册成功就要向聊天服务器发送消息
+	if (rRegisterRsp.type() == 3)
+	{
+		CSMsg oCSMsg;
+		CSMsgRegisterSuccessReq* pMsgRsp = static_cast<CSMsgRegisterSuccessReq*>(ChatHandler::OnCSMsg(oCSMsg, 0, CS_MSGID_Chat, CSMsgServer_RegisterSuccess)); 
+		HANDCHECH_P(pMsgRsp,-2);
+		pMsgRsp->set_uid(rRegisterRsp.uid());
+		pMsgRsp->set_name(rRegisterRsp.name());
+		SendClient(MSGCLIENT->GetSocketIo(),&oCSMsg);
+	}
 	int iRet = RegisterLoginWork::RegisterRsp(rRegisterRsp,pRegisterRsp);
 	//如果是小于0证明数据错误，不可以发送,输入日志里
 	if (iRet < 0)
@@ -395,10 +405,16 @@ int RegisterLoginHandler::OnLoginRsp(const SSMsg& rSSMsg)
 	CSMsg oCSMsg;
 	CSLoginRsp* pLoginRsp = static_cast<CSLoginRsp*>(OnCSMsg(oCSMsg,rSSMsg.head().uid(), CS_MSGID_RegisterLogin, CSRegisterLoginCmd_Login)); 
 	HANDCHECH_P(pLoginRsp,-1);
-	/*
-	CRoleObj* pRoleObj = GetRole(rCSMsg.head().uid());
-	HANDCHECH_P(pRoleObj,-2);
-	*/
+	//向聊天服务器发送登录成功协议
+	if (rLoginRsp.type() == 3)
+	{
+		CSMsg oCSMsg;
+		CSMsgLoginSuccessReq* pMsgRsp = static_cast<CSMsgLoginSuccessReq*>(ChatHandler::OnCSMsg(oCSMsg, 0, CS_MSGID_Chat, CSMsgServer_LoginSuccess)); 
+		HANDCHECH_P(pMsgRsp,-2);
+		pMsgRsp->set_uid(rLoginRsp.role().uid());
+		SendClient(MSGCLIENT->GetSocketIo(),&oCSMsg);
+	}
+
 	int iRet = RegisterLoginWork::LoginRsp(rLoginRsp,pLoginRsp,DBCLIENT->GetMapIo((int)rSSMsg.head().uid()));
 	
 	if (iRet < 0)

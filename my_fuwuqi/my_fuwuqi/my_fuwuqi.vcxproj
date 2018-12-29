@@ -14,6 +14,7 @@
     <ClInclude Include="BagHandler.hpp" />
     <ClInclude Include="BagManager.hpp" />
     <ClInclude Include="BagWork.hpp" />
+    <ClInclude Include="ChatHandler.hpp" />
     <ClInclude Include="CSmsg.pb.h" />
     <ClInclude Include="DataStore.hpp" />
     <ClInclude Include="DBmsg.pb.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="BagHandler.cpp" />
     <ClCompile Include="BagManager.cpp" />
     <ClCompile Include="BagWork.cpp" />
+    <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="CSmsg.pb.cc" />
     <ClCompile Include="DataStore.cpp" />
     <ClCompile Include="DBmsg.pb.cc" />

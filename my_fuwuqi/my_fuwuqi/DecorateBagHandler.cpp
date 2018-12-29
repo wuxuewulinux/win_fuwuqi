@@ -3,6 +3,7 @@
 #include "enterfunction.hpp"
 #include "DecorateBagWork.hpp"
 #include "sendclient.hpp"
+#include "UpdateData.hpp"
 
 DecorateBagHandler::DecorateBagHandler()
 {
@@ -125,20 +126,17 @@ void* DecorateBagHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int
 	{
 		return NULL;
 	}
+
 	//从这里开始增加结构指针就可以了。
-
-	CSDecorateBagFetchRsp * pFetchRsp = pReqParam->mutable_fetchrsp();				//获取界面展示结构指针内存
-	CSDecorateBagVIPFetchRsp * pVIPFetchRsp	= pReqParam->mutable_vipfetchrsp();
-
-	/////////////////////////
-
 	//进行判断获取对应的内存指针出去
 	if (CmdType == CSDecorateBagCmd_Fetch)
 	{
+		CSDecorateBagFetchRsp * pFetchRsp = pReqParam->mutable_fetchrsp();
 		return (void*)pFetchRsp;
 	}
 	else if (CmdType == CSDecorateBagCmd_VipFetch)
 	{
+		CSDecorateBagVIPFetchRsp * pVIPFetchRsp	= pReqParam->mutable_vipfetchrsp();
 		return (void*)pVIPFetchRsp;
 	}
 	return NULL;
@@ -174,8 +172,24 @@ int DecorateBagHandler::OnShowSetReq(const CSMsg& rCSMsg, int iFd)
 
 	CRoleObj* pRoleObj = GetRole(rCSMsg.head().uid());
 	HANDCHECH_P(pRoleObj, -1);
-	DecorateBagWork::OnBagShowSet( pRoleObj,rReq);
-	return 0;
+	int iRet = DecorateBagWork::OnBagShowSet( pRoleObj,rReq);
+	if(iRet == 0)
+	{
+		//判断是否是VIP 头像 聊天框
+		if (rReq.type() == VIP_TYPE)
+		{
+			UpdateData::UpMsgStatus(rCSMsg.head().uid(),rReq.id(),VIP);
+		}
+		if (rReq.type() == HEAD_TYPE)
+		{
+			UpdateData::UpMsgStatus(rCSMsg.head().uid(),rReq.id(),HEAD);
+		}
+		if (rReq.type() == CHATFRAME_TYPE)
+		{
+			UpdateData::UpMsgStatus(rCSMsg.head().uid(),rReq.id(),CHATFRAME);
+		}
+	}
+	return iRet;
 }
 
 

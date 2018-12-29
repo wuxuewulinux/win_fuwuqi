@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 
 
-void SendServer(int userio,SSMsg * test)
+void SendClient(int userio,CSMsg * test)
 {
 	//开始序列化数据
 	struct sendshuji sendtest;
@@ -76,10 +76,10 @@ void errorsend(int userio,int error)
 {
 	//开始序列化数据
 	
-	SSMsg test;
-	SSMsgHead * head = test.mutable_head();
+	CSMsg test;
+	CSMsgHead * head = test.mutable_head();
     head->set_uid(3);                  //设置错误模块为 3 标识，该设置以后可能会修改，set_type表示访问模块的类型值
-	head->set_msgid(SS_MSGID_GameMysql);
+	head->set_msgid(CS_MSGID_Chat);
 	//test.set_error(error);                 //错误ID号为error，在客户端提示 error 应该显示那个信息
 	struct sendshuji sendtest;
 	unsigned short len = test.ByteSize();

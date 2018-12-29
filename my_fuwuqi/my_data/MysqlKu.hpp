@@ -50,7 +50,7 @@ public:
 
 	//插入注册成功的游戏客户到mysql中
 
-	void InsertAccount (const string & zhanghu,const string & mingzi,const string & mima,const string & DBRole);
+	void InsertAccount(const string & zhanghu,const string & mingzi,const string & mima,const string & DBRole);
 
 	//修改mysql数据库中的游戏用户积分
 

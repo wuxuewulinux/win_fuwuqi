@@ -11,8 +11,6 @@
 #include "readn.hpp"
 #include "txtlog.hpp"
 #include "timeku.hpp"
-#include "../proto/SSmsg.pb.h"
-
 
 //判断指针的宏函数
 #define HANDCHECH_P(a,b) \
@@ -61,6 +59,20 @@ struct timeduilie       //定时器需要保存的结构体
 	int userid;
 };
 
+struct RoleInfo			//用户基本信息，客户端需要的信息
+{
+	uint64_t Uid;
+	std::string Name;
+	uint32_t Grade;
+	uint32_t Rank;
+	uint32_t Status;
+	uint32_t Vip;
+	uint32_t Head;
+	uint32_t ChatFrame;
+	
+};
+
+
 	extern char BUFF[200];
 
 	extern pthread_cond_t readcode;       //读数据条件变量的变量
@@ -98,6 +110,8 @@ struct timeduilie       //定时器需要保存的结构体
 	extern txtlog MYLOG;                    //声明一个记录错误日志的全局类。
 
 	extern timeku timelei;                //声明一个时间库类，专门管理所有的定时时间变化
+
+	extern std::map<uint64_t,int> rUidMap;		//保存所有上线的列表
 
 
 #endif

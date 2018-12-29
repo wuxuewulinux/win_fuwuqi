@@ -12,14 +12,14 @@
 
 using namespace std;
 
-#define MSGCLIENT SocketDBClient::Instance()
+#define MSGCLIENT SocketMsgDBClient::Instance()
 
-class SocketDBClient
+class SocketMsgDBClient
 {
 public:
-	SocketDBClient();
-	~SocketDBClient();
-	static SocketDBClient * Instance();
+	SocketMsgDBClient();
+	~SocketMsgDBClient();
+	static SocketMsgDBClient * Instance();
 	int CreateSocket(const char * dizi,int duankou);
 	int ConnectDB();
 	int GetSocketIo(){return SocketIo;}

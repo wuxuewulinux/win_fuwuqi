@@ -1,29 +1,29 @@
 
 #include "SocketMsgClient.hpp"
 
-SocketDBClient::SocketDBClient()
+SocketMsgDBClient::SocketMsgDBClient()
 {
 
 }
-SocketDBClient::~SocketDBClient()
+SocketMsgDBClient::~SocketMsgDBClient()
 {
 
 }
 
-SocketDBClient * gm_Msgclient = NULL;
+SocketMsgDBClient * gm_Msgclient = NULL;
 
-SocketDBClient * SocketDBClient::Instance()
+SocketMsgDBClient * SocketMsgDBClient::Instance()
 {
 	if (NULL == gm_Msgclient)
 	{
-		gm_Msgclient = new SocketDBClient();
+		gm_Msgclient = new SocketMsgDBClient();
 	}
 
 	return gm_Msgclient;
 
 }
 
-int SocketDBClient::CreateSocket(const char * dizi,int duankou)
+int SocketMsgDBClient::CreateSocket(const char * dizi,int duankou)
 {
 	if((SocketIo = socket(AF_INET, SOCK_STREAM, 0))<0)
 	{
@@ -35,24 +35,24 @@ int SocketDBClient::CreateSocket(const char * dizi,int duankou)
 	addrCli.sin_addr.s_addr = inet_addr(dizi);
 	return 0;
 }
-int SocketDBClient::ConnectDB()
+int SocketMsgDBClient::ConnectDB()
 {
 	if(connect(SocketIo,(struct sockaddr*)&addrCli,sizeof(addrCli)) < 0)
 	{
-		cout<<"Client Connect DB Fail !"<<endl;
+		cout<<"Client Connect msgDB Fail !"<<endl;
 		return -1;
 	}
 	else
 	{
-		cout<<"Client Connect DB Success !"<<endl;
+		cout<<"Client Connect msgDB Success !"<<endl;
 	}
 	return 0;
 }
 
 
-int SocketDBClient::GetMapIo(int Key)
+int SocketMsgDBClient::GetMapIo(int Key)
 {
-	map<int, int>::const_iterator iter = rMap.find(Key);
+	map<uint64_t, int>::const_iterator iter = rMap.find(Key);
 	if (rMap.end() != iter)
 	{
 		return iter->second;

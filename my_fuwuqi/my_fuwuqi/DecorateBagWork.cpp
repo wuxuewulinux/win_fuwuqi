@@ -34,8 +34,8 @@ int DecorateBagWork::GenCSBagInfo( CRoleObj * pRoleObj,const CSDecorateBagFetchR
 int DecorateBagWork::OnBagShowSet(CRoleObj * pRoleObj,const CSDecorateBagShowSetReq & req)
 {
 	HANDCHECH_P( pRoleObj, -1 );
-	pRoleObj->GetDecorateBagMgr().SetDecorateItemShowBag(req.id(),req.type());
-	return 0;
+	int iRet = pRoleObj->GetDecorateBagMgr().SetDecorateItemShowBag(req.id(),req.type());
+	return iRet;
 }
 
 

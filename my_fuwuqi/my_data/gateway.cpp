@@ -37,6 +37,7 @@ if(!LOGIC_CONFIG->Init("/home/wuxuewu/datamysql/config_xml/"))
 struct my_mysql * pMysql = LOGIC_CONFIG->GetServerMysqlConfig().GetMysqlConfig();	//获取mysql数据库基本信息
 if(MYSQLKU->InitMysql(pMysql->user,pMysql->mima,pMysql->database,pMysql->table) < 0)//连接数据库
 	return;
+
 const struct MysqlServer * test = LOGIC_CONFIG->GetServerMysqlConfig().GetMysqlServerConfig(); //获取mysql服务器IP和端口
 // TCP/IP启动
 Socket_Ku socket_lei(test->ip.c_str(),test->port);

@@ -261,9 +261,187 @@ message CSDecorateBagRsp
 
 
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////装饰背包模块/////////////////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////聊天模块//////////////////////////////////////////////////////////////////////
+
+message FriendList					//该字段是好友列表字段，用来序列化和反序列化每个用户的好友列表
+{
+	repeated uint64 FriendUid = 1;	//好友Uid
+}
+
+enum CSChatCmd
+{
+	//游戏服务器发给聊天服务器的
+	CSMsgServer_RegisterSuccess = 1;			//聊天服务器注册成功功能
+	CSMsgServer_LoginSuccess = 2;				//聊天服务器登录成功功能
+	CSMsgServer_Quit = 3;						//聊天服务器用户离线功能
+	
+	//聊天服务器与客户端交互
+	
+	CSMsgServer_FriendLine = 4;					//好友上线通知功能
+	CSMsgServer_AskAddFriend = 5;				//请求添加好友
+	CSMsgServer_SuccessAddFriend = 6;			//成功添加对方为好友
+	CSMsgServer_DeleteFriend = 7;				//删除好友功能
+	CSMsgServer_SendChat = 8;					//好友发送聊天
+	CSMsgServer_FindName = 9;					//查找用户
+	CSMsgServer_ChangeStatus = 10;				//玩家某个状态发生改变(等级，头像，聊天框，vip,段位，状态) 统一使用该协议（游戏服务器主动通知聊天服务器)							  				
+}
+
+
+message CSMsgRegisterSuccessReq				//聊天服务器注册成功功能
+{
+	optional uint64 uid = 1;
+	optional string name = 2;				//名称
+}
+
+message CSMsgLoginSuccessReq				//聊天服务器登录成功功能
+{
+	optional uint64 uid = 1;				
+}
+
+message CSMsgQuitReq						//聊天服务器用户离线（退出）
+{
+	optional uint64 uid = 1;				
+}
+
+message CSMsgRoleInfo							//用户的基本信息
+{
+	optional uint64 Uid = 1;
+	optional uint32 Grade = 2;
+	optional uint32 Rank = 3;
+	optional uint32 Status = 4;
+	optional uint32 Vip = 5;
+	optional uint32 Head = 6;
+	optional uint32 ChatFrame = 7;
+	optional string Name = 8;
+}
+
+message CSMsgRoleInfoList
+{
+	repeated CSMsgRoleInfo RoleInfo = 1;
+}
+
+message CSMsgLoginSuccessRsp				//用户登录成功时就会发送所有好友列表数据(聊天服务器主动发送给客户端)
+{
+	optional CSMsgRoleInfoList FriendList = 1;
+}
+
+message CSMsgAskAddFriendReq			//请求添加好友功能
+{
+	optional string Name = 1;			//本用户的名称
+	optional uint64 Uid = 2;			//添加对象的Uid
+}
+
+message CSMsgAskAddFriendRsp			//请求添加好友功能
+{
+	optional uint64 Uid = 1;			//对方的Uid
+	optional string FriendName = 2;		//对方的名称
+}
+
+message CSMsgSuccessAddFriendReq		//成功添加好友
+{
+	optional uint64 Uid1 = 1;
+	optional uint64 Uid2 = 2;
+}
+
+message CSMsgSuccessAddFriendRsp		//成功添加好友
+{
+	optional CSMsgRoleInfo FriendRoleInfo = 1;
+}
+
+message CSMsgDeleteFriendReq			//删除好友功能
+{
+	optional uint64 Uid1 = 1;
+	optional uint64 Uid2 = 2;
+}
+
+message CSMsgDeleteFriendRsp			//删除好友功能
+{
+	optional uint64 Uid = 1;			//从好友列表中移除一个好友
+}
+
+message CSMsgSendChatReq				//发送好友聊天
+{
+	optional uint64 Uid1 = 1;			//用户UID
+	optional uint64 Uid2 = 2;			//好友UID
+	optional string information = 3;	//消息内容
+}
+
+message CSMsgSendChatRsp				//收好友聊天内容
+{
+	optional uint64 Uid = 1;			//好友UID
+	optional string information = 2;	//消息内容
+}
+
+message CSMsgFindNameReq				//查找用户
+{
+	optional string name = 1;
+}
+
+message CSMsgFindNameRsp				//查找用户
+{
+	optional CSMsgRoleInfo RoleInfo = 1;
+}
+
+message CSMsgChangeStatusReq		//用户状态改变
+{
+	optional uint32 type = 1;		//改变状态的ID号范围为 1 - 6，每个数值对应某个状态的执行
+	optional uint32 value = 2;		//更改为该数值
+	optional uint64 Uid = 3;		//该用户唯一UID
+}
+
+message CSMsgChangeStatusRsp		//用户状态改变
+{
+	optional CSMsgRoleInfo RoleInfo = 1;
+}
+
+message CSChatReqParam
+{
+	optional CSMsgRegisterSuccessReq RegisterSuccessReq = 1;
+	optional CSMsgLoginSuccessReq LoginSuccessReq = 2;
+	optional CSMsgQuitReq MsgQuitReq = 3;
+	optional CSMsgAskAddFriendReq AskAddFriendReq = 4;
+	optional CSMsgSuccessAddFriendReq SuccessAddFriendReq = 5;
+	optional CSMsgDeleteFriendReq DeleteFriendReq = 6;
+	optional CSMsgSendChatReq SendChatReq  = 7;
+	optional CSMsgFindNameReq FindNameReq = 8;
+	optional CSMsgChangeStatusReq ChangeStatusReq = 9;
+}
+
+
+message CSChatRspParam
+{
+	optional CSMsgLoginSuccessRsp MsgLoginSuccess = 1;
+	optional CSMsgRoleInfo RoleInfo = 2;				//用户的基本信息，上线了就要广播给你上线的好友
+	optional CSMsgRoleInfo RoleQuit = 3;				//用户的基本信息，离线了就要广播给你上线的好友
+	optional CSMsgAskAddFriendRsp AskAddFriendRsp = 4;	
+	optional CSMsgSuccessAddFriendRsp SuccessAddFriendRsp = 5;
+	optional CSMsgDeleteFriendRsp DeleteFriendRsp = 6;
+	optional CSMsgSendChatRsp SendChatRsp = 7;
+	optional CSMsgFindNameRsp FindNameRsp = 8;
+	optional CSMsgChangeStatusRsp ChangeStatusRsp = 9;
+}
+
+message CSChatReq
+{
+	required CSChatCmd cmd = 1 ;
+	optional CSChatReqParam reqParam = 2;
+}
+
+message CSChatRsp
+{
+	optional int32 result = 1 ;								
+	required CSChatCmd cmd = 2 ;
+	optional CSChatRspParam  rspParam = 3 ;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////聊天模块//////////////////////////////////////////////////////////////////////
 
 
 
@@ -278,10 +456,13 @@ enum CSMsgID
 	
 	CS_MSGID_BAG = 2;										//背包模块
 	
-	CS_MSGID_DecorateBAG = 3;								//装饰背包模块		
+	CS_MSGID_DecorateBAG = 3;								//装饰背包模块	
+
+	CS_MSGID_Chat = 4;										//聊天模块	
+	
 	//如果还有别的模块就这里进行扩展
 	
-	CS_MSGID_MAX = 4;
+	CS_MSGID_MAX = 5;
 } 
 
 message CSMsgBody
@@ -296,6 +477,9 @@ message CSMsgBody
 	
 	optional CSDecorateBagReq DecorateBagReq = 5;
 	optional CSDecorateBagRsp DecorateBagRsp = 6;
+	
+	optional CSChatReq ChatReq = 7;
+	optional CSChatRsp ChatRsp = 8;
 }
 
 
