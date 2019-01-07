@@ -8,7 +8,7 @@ void SendClient(int userio,CSMsg * test);    //¸Ãº¯ÊıÊÇÂß¼­²ãÔÚ·¢ËÍÊı¾İ¸ø¿Í»§¶ËÊ
 
 void SendServer(int userio,SSMsg * test);	//¸Ãº¯ÊıÊÇ·¢¸øÁíÒ»¸ö·şÎñÆ÷£¨½ø³Ì)
 
-void timesend(int kaiguan,int index,int miao,int userid); //¸Ãº¯ÊıÊÇÂß¼­²ãÖ»ÒªÓÃµ½¶¨Ê±Æ÷¾Í»áµ÷ÓÃ£¬¸øÉÏ²ãÒ»¸ö¶¨Ê±½Ó¿Ú
+void TimeSend(bool kaiguan,int index,int miao,int userid); //¸Ãº¯ÊıÊÇÂß¼­²ãÖ»ÒªÓÃµ½¶¨Ê±Æ÷¾Í»áµ÷ÓÃ£¬¸øÉÏ²ãÒ»¸ö¶¨Ê±½Ó¿Ú
 
 void errorsend(int userio,int error);           //·¢ËÍ´íÎóÂë¸ø¿Í»§¶Ë£¬Ö»Òª³öÏÖ´íÎóÌáÊ¾¸ø¿Í»§¶Ë¾Íµ÷ÓÃ¸Ãº¯Êı½Ó¿Ú¡£errorÎª´íÎóÂëµÄÖµ
 

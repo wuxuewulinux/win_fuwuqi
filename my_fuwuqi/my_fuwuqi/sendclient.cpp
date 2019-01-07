@@ -76,7 +76,7 @@ void SendServer(int userio,SSMsg * test)
 //上层逻辑定时器接口函数
 
 
-void timesend(int kaiguan,int index,int miao,int userid)
+void TimeSend(bool kaiguan,int index,int miao,int userid)
 {
 
 	struct timeduilie timetest;

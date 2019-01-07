@@ -12,6 +12,7 @@
 #include<string>
 #include"mingchengconfig.hpp"
 #include"serverconfig.hpp"
+#include "TimeConfig.hpp"
 
 /*
 <?xml version="1.0" encoding="gb2312"?> //使用gb2312编码格式，不然读取中文字符串出现乱码
@@ -35,13 +36,17 @@ public:
 
 	ServerConfig & GetServerMysqlConfig(){return server_mysql;}
 
+	TimeConfig & GetTimeConfig(){return m_oTimeConfig;}
+
 private:
 	LogicConfigManager();
 	~LogicConfigManager();
 
 	ServerConfig server_mysql;       //服务器与据库的配置
 
-	MingChengConfig mingcheng;     //游戏称号的配置
+	MingChengConfig mingcheng;		//游戏称号的配置
+
+	TimeConfig m_oTimeConfig;		//配置游戏触发时间(匹配时间，选择英雄界面时间)
 
 	//如果还有其他模块的配置类就在以下添加
 

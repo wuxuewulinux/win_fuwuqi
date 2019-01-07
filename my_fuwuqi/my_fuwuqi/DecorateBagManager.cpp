@@ -239,3 +239,22 @@ int DecorateBagManager::AllCheckDecorateItemTime()
 
 	return 0;
 }
+
+
+TDBDecorateBagVIPItem* DecorateBagManager::GetVIPTypeInfo(uint32_t VipId)
+{
+	if (VipId == RED)
+	{
+		return &rBagVIPInfo.m_stVipGridList.m_astVipGrids[0];
+	}
+	else if (VipId == YELLOW)
+	{
+		return &rBagVIPInfo.m_stVipGridList.m_astVipGrids[1];
+	}
+	else if (VipId == PURPLE)
+	{
+		return &rBagVIPInfo.m_stVipGridList.m_astVipGrids[2];
+	}
+
+	return NULL;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="gb2312"?>
+<root>
+	<!--匹配成功-->
+	<MateFetch>
+		<data>
+			<MateFetchTime>10</MateFetchTime>
+		</data>
+	</MateFetch>
+	<!--进入选择英雄界面-->
+	<MateShowHeroFetch>
+		<data>
+			<MateShowHeroFetchTime>30</MateShowHeroFetchTime>
+		</data>
+	</MateShowHeroFetch>
+	
+</root>

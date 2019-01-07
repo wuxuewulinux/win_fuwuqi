@@ -6,6 +6,7 @@
 #include "BagHandler.hpp"
 #include "DecorateBagHandler.hpp"
 #include "ChatHandler.hpp"
+#include "MateHandler.hpp"
 
 #define HANDLERLIST CHandlerList::Instance()
 
@@ -38,6 +39,7 @@ private:
 	static CBagHandler m_oBagHandler;										//背包模块handler
 	static DecorateBagHandler m_oDecorateBagHandler;						//装饰背包handler
 	static ChatHandler m_oChatHandler;										//聊天模块Handler
+	static MateHandler m_oMateHandler;										//匹配模块handler
 
 };
 

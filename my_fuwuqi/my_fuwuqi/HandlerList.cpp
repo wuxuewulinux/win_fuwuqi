@@ -10,6 +10,7 @@ RegisterLoginHandler CHandlerList::m_oRegisterLoginHandler;					//初始化登陆注册
 CBagHandler CHandlerList::m_oBagHandler;									//初始化背包handler
 DecorateBagHandler CHandlerList::m_oDecorateBagHandler;						//初始化装饰背包handler
 ChatHandler CHandlerList::m_oChatHandler;									//聊天模块Handler
+MateHandler CHandlerList::m_oMateHandler;									//匹配模块Handler
 
 
 CHandlerList* gm_hand = NULL;
@@ -30,6 +31,7 @@ int CHandlerList::Init()  //把Handler压到m_apCSHandler数组中。
 	RegisterHandler(CS_MSGID_BAG,		&m_oBagHandler);
 	RegisterHandler(CS_MSGID_DecorateBAG,&m_oDecorateBagHandler);
 	RegisterHandler(CS_MSGID_Chat,&m_oChatHandler);
+	RegisterHandler(CS_MSGID_Mate,&m_oMateHandler);
 
 	return 0;
 }

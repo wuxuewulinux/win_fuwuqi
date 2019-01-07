@@ -120,6 +120,18 @@
     <ClInclude Include="ChatHandler.hpp">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="MateHandler.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="MateWork.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeEvent.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeConfig.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BagHandler.cpp">
@@ -230,12 +242,27 @@
     <ClCompile Include="ChatHandler.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="MateHandler.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="MateWork.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeEvent.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeConfig.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="mingcheng.xml">
       <Filter>config_xml</Filter>
     </Xml>
     <Xml Include="server_mysql.xml">
+      <Filter>config_xml</Filter>
+    </Xml>
+    <Xml Include="GameTime.xml">
       <Filter>config_xml</Filter>
     </Xml>
   </ItemGroup>

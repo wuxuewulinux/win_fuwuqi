@@ -11,10 +11,12 @@ enum BagType
 	VIP_TYPE = 1,
 	HEAD_TYPE = 2,
 	CHATFRAME_TYPE = 3,
-	ZHADAO_TYPE = 4,
+	ZHADAN_TYPE = 4,
 	DIPAN_TYPE = 5,
 	ZHANJI_TYPE = 6,
-	SKILL_TYPE = 7
+	SKILLONE_TYPE = 7,
+	SKILLTWO_TYPE = 8,
+	MAX_TYPE = 9
 };
 
 class DecorateBagHandler : public IHandler

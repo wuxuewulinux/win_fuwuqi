@@ -288,7 +288,8 @@ enum CSChatCmd
 	CSMsgServer_DeleteFriend = 7;				//删除好友功能
 	CSMsgServer_SendChat = 8;					//好友发送聊天
 	CSMsgServer_FindName = 9;					//查找用户
-	CSMsgServer_ChangeStatus = 10;				//玩家某个状态发生改变(等级，头像，聊天框，vip,段位，状态) 统一使用该协议（游戏服务器主动通知聊天服务器)							  				
+	CSMsgServer_ChangeStatus = 10;				//玩家某个状态发生改变(等级，头像，聊天框，vip,段位，状态) 统一使用该协议（游戏服务器主动通知聊天服务器)
+	CSMsgServer_ConnectSuccess = 11;			//客户端连接聊天服务器成功就要发送一个请求压入他的上线IO到容器中
 }
 
 
@@ -399,6 +400,11 @@ message CSMsgChangeStatusRsp		//用户状态改变
 	optional CSMsgRoleInfo RoleInfo = 1;
 }
 
+message CSMsgConnectSuccessReq		//连接聊天服务器成功发送uid上线压入容器中
+{
+	optional uint64 uid = 1;
+}
+
 message CSChatReqParam
 {
 	optional CSMsgRegisterSuccessReq RegisterSuccessReq = 1;
@@ -410,6 +416,7 @@ message CSChatReqParam
 	optional CSMsgSendChatReq SendChatReq  = 7;
 	optional CSMsgFindNameReq FindNameReq = 8;
 	optional CSMsgChangeStatusReq ChangeStatusReq = 9;
+	optional CSMsgConnectSuccessReq ConnectSuccessReq = 10;
 }
 
 
@@ -446,6 +453,165 @@ message CSChatRsp
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////匹配模块//////////////////////////////////////////////////////////////////////
+
+enum CSMateCmd
+{
+//逻辑功能枚举
+CSMateCmd_MateFetch = 1;			//点击匹配功能
+CSMateCmd_MateNotSuccess = 2;		//有人不点击同意进入游戏，导致无法开始游戏。所以应该广播通知玩家
+CSMateCmd_MateNotUser = 3;			//发送该协议给哪些没有点击同意让时间超时的玩家，让他们的客户端界面关闭掉匹配状态.
+CSMateCmd_QuitMateFetch = 4;		//玩家在匹配时，他突然点击关闭匹配。相当于退出匹配列表
+CSMateCmd_NotButtonMateFetch = 5;	//成功匹配够人数弹出同意和拒绝按钮，但是玩家选择拒绝按钮
+CSMateCmd_SuccessButtonMateFetch = 6;	//成功匹配够人数弹出同意和拒绝按钮，但是玩家选择同意按钮
+CSMateCmd_EnterHeroShow = 7;		//进入游戏选英雄界面的协议号，触发该协议就是让玩家进入英雄界面.
+CSMateCmd_EnterHeroShowBag = 8;		//进入游戏选择英雄界面就有选择特效和皮肤功能。该协议全部包含所有的选择，带上类型和ID就可以了，除了炸弹背包外，该协议不处理炸弹背包
+CSMateCmd_SendUserHeroShow = 9;		//服务器返回哪个玩家选择哪种炸弹。服务器主动发送协议给客户端（Uid,炸弹ID），因为别人选择什么你都需要知道，然后你不可以在选了
+CSMateCmd_ShowZhaDanBag = 10;		//选择炸弹时就走这条协议，同样服务器也会返回数据回来给客户端。该协议如果回来就证明就选择这个炸弹成功了
+}
+
+message CSMateFetchReq				//点击匹配功能
+{
+	optional uint64 uid = 1;
+}
+
+message CSQuitMateFetchReq
+{
+	optional uint64 uid = 1;
+}
+
+message CSNotButtonMateFetchReq
+{
+	optional uint64 uid = 1;
+}
+
+message CSSuccessButtonMateFetchReq
+{
+	optional uint64 uid = 1;
+}
+
+message CSShowHeroVipInfo			//进入选英雄界面。人物需要显示他的Vip信息
+{
+	optional uint32 VipId = 1;
+	optional uint32 VipGrade = 2;
+}
+
+message CSShowHeroInfo
+{
+	optional uint64 uid = 1;
+	optional uint32 VipID = 2;
+	optional uint32 VipGrade = 3;
+	optional uint32 RoleGrade = 4;
+	optional uint32 RoleRank = 5;
+	optional uint32 RoleHeadType = 6;
+	optional string Name = 7;
+}
+
+message CSShowHeroInfoList
+{
+	repeated CSShowHeroInfo HeroInfoList = 1;
+}
+
+message CSFeiJiBagList					//飞机背包
+{
+	repeated uint32 FeiJi = 1;
+}
+
+message CSZhaDanBagList					//炸弹背包
+{
+	repeated uint32 ZhaDan = 1;
+}
+
+message CSFeiJiDiPanBagList				//飞机底盘背包
+{
+	repeated uint32 FeiJiDiPan = 1;		
+}
+
+message CSFeiJiSkillOneBagList			//飞机被动技能1背包
+{
+	repeated uint32 FeiJiSkillOne = 1;
+}
+
+message CSFeiJiSkillTwoBagList			//飞机被动技能2背包
+{
+	repeated uint32 FeiJiSkillTwo = 1;
+}
+
+message CSEnterHeroShowRsp				//进入游戏选英雄界面
+{
+	optional CSShowHeroVipInfo ShowHeroVipInfo = 1;
+	optional CSShowHeroInfoList HeroShow = 2;
+	
+	//以下是他个人背包，以后增加新的背包就在这里增加背包数据
+	optional CSFeiJiBagList FeiJiBagList = 3;
+	optional CSZhaDanBagList ZhaDanBagList = 4;
+	optional CSFeiJiDiPanBagList FeiJiDiPanBagList = 5;
+	optional CSFeiJiSkillOneBagList FeiJiSkillOneBagList = 6;
+	optional CSFeiJiSkillTwoBagList FeiJiSkillTwoBagList = 7;
+}
+
+message CSEnterHeroShowBagReq
+{
+	optional uint64 Uid = 1;
+	optional uint32 DecorateBagType = 2;			//装饰背包类型，英雄选择界面的背包都有独立的类型
+	optional uint32 Id = 3;							//每个装饰背包都会有独立很多ID，每个ID对应一个物品
+}
+
+message CSSendUserHeroShowRsp			//服务器主动发送CSMateCmd_SendUserHeroShow协议给客户端
+{
+	optional uint64 Uid = 1;			//其中一个玩家的UID
+	optional uint32 ZhadanId=2;			//该玩家选择的炸弹ID
+}
+
+message CSShowZhaDanBagReq				//玩家选择炸弹
+{
+	optional uint64 Uid = 1;			//本玩家的UID
+	optional uint32 ZhadanId = 2;		//本玩家选择的炸弹ID
+}	
+
+message CSShowZhaDanBagRsp				//玩家选择炸弹
+{
+	optional uint32 ZhadanId = 1;	
+}
+
+message CSMateReqParam
+{
+	optional CSMateFetchReq MateFetchReq = 1;
+	optional CSQuitMateFetchReq QuitMateFetchReq = 2;
+	optional CSNotButtonMateFetchReq NotButtonMateFetchReq = 3;
+	optional CSSuccessButtonMateFetchReq SuccessButtonMateFetchReq = 4;
+	optional CSEnterHeroShowBagReq EnterHeroShowBagReq = 5;
+	optional CSShowZhaDanBagReq ShowZhaDanBagReq = 6;
+}
+
+
+message CSMateRspParam
+{
+	optional CSEnterHeroShowRsp EnterHeroShowRsp = 1;
+	optional CSSendUserHeroShowRsp SendUserHeroShowRsp = 2;
+	optional CSShowZhaDanBagRsp ShowZhaDanBagRsp = 3;
+}
+
+
+message CSMateReq
+{
+	required CSMateCmd cmd = 1 ;
+	optional CSMateReqParam reqParam = 2;
+}
+
+message CSMateRsp
+{
+	optional int32 result = 1 ;								
+	required CSMateCmd cmd = 2 ;
+	optional CSMateRspParam  rspParam = 3 ;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////匹配模块//////////////////////////////////////////////////////////////////////
+
+
+
 enum CSMsgID
 {
 	//填写模块的ID号
@@ -460,9 +626,11 @@ enum CSMsgID
 
 	CS_MSGID_Chat = 4;										//聊天模块	
 	
+	CS_MSGID_Mate = 5;										//匹配模块
+	
 	//如果还有别的模块就这里进行扩展
 	
-	CS_MSGID_MAX = 5;
+	CS_MSGID_MAX = 6;
 } 
 
 message CSMsgBody
@@ -480,6 +648,10 @@ message CSMsgBody
 	
 	optional CSChatReq ChatReq = 7;
 	optional CSChatRsp ChatRsp = 8;
+	
+	optional CSMateReq MateReq = 9;
+	optional CSMateRsp Matersp = 10;
+	
 }
 
 

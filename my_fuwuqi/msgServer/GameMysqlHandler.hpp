@@ -46,6 +46,7 @@ private:
 	int OnSendChatReq(const CSMsg& rCSMsg, int iFd);
 	int OnFindNameReq(const CSMsg& rCSMsg, int iFd);
 	int OnChangeStatusReq(const CSMsg& rCSMsg, int iFd);
+	int OnConnectSuccessReq(const CSMsg& rCSMsg, int iFd);
 
 };
 

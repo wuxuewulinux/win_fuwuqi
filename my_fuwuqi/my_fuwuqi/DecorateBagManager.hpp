@@ -5,6 +5,12 @@
 #include "DataStore.hpp"
 #include "../proto/DBmsg.pb.h"
 
+enum VIP_Type
+{
+	RED = 2,		//红色VIP 配置表ID为2
+	YELLOW = 3,		//黄色VIP 配置表ID为3
+	PURPLE = 4		//紫色VIP 配置表ID为4
+};
 
 class DecorateBagManager
 {
@@ -42,6 +48,8 @@ public:
 
 	int AllCheckDecorateItemTime();											//刷新所有装饰背包时间
 
+	//按VIP的某个ID号去拿该VIP种类的数值
+	TDBDecorateBagVIPItem* GetVIPTypeInfo(uint32_t VipId);
 
 
 private:

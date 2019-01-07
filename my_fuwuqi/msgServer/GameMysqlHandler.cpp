@@ -87,6 +87,11 @@ int GameMysqlHandler::OnServerMsg(const CSMsg& rCSMsg, int iFd)
 			iRet = OnChangeStatusReq(rCSMsg, iFd);
 		}
 		break;
+	case CSMsgServer_ConnectSuccess:					//客户端连接聊天服务器成功发送UID压入通信容器中
+		{
+			iRet = OnConnectSuccessReq(rCSMsg, iFd);
+		}
+		break;
 	default:
 		iRet = -1;
 	}
@@ -534,5 +539,14 @@ int GameMysqlHandler::OnChangeStatusReq(const CSMsg& rCSMsg, int iFd)
 		return -3;
 	}
 	
+	return iRet;
+}
+
+
+
+int GameMysqlHandler::OnConnectSuccessReq(const CSMsg& rCSMsg, int iFd)
+{
+	const CSMsgConnectSuccessReq & Req = rCSMsg.body().chatreq().reqparam().connectsuccessreq();
+	PushRoleIo(Req.uid(),iFd);
 	return 0;
 }

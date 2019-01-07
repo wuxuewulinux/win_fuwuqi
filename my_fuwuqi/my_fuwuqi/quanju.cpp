@@ -42,3 +42,19 @@ txtlog MYLOG;                    //声明一个记录错误日志的全局类。
 
 timeku timelei;                //声明一个时间库类，专门管理所有的定时时间变化
 
+std::map<uint64_t,int> UserRoom;		//每个进入匹配的玩家都会有一个房间号，进入匹配的uid对应一个房间号
+
+std::map<int,Room> RoomMap;				//等待开始游戏的房间。
+
+std::stack<int> DeleteStack;			//保存所有被销毁的房间，相当于回收房间号
+
+int iRoomIndex = 0;
+
+
+std::map<uint64_t,int> UserHeroRoom;		//每个进入英雄选择界面的玩家都会有一个房间号，进入匹配的uid对应一个房间号
+
+std::map<int,ShowHeroRoom> HeroRoomMap;			//等待英雄选择界面开始游戏的房间。
+
+std::stack<int> DeleteHeroRoomStack;			//保存所有被销毁的房间，相当于回收英雄选择界面房间号
+
+int iHeroRoomIndex = 0;

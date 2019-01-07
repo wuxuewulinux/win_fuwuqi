@@ -41,6 +41,14 @@ bool LogicConfigManager::Init(std::string Path)
 		}
 	}
 
+	//读取游戏时间模块配置
+	{
+		if (!m_oTimeConfig.Init(Path + "GameTime.xml"))   
+		{
+			return false;
+		}
+	}
+
 	//如果还有其他模块的配置可以在这里扩展代码
 
 	return true;
