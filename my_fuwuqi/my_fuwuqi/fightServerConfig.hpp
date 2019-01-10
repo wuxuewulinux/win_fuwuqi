@@ -28,6 +28,10 @@ public:
 
 	int GetEmptyFightServerID();								//获取一个空闲的战斗服务器ID给战斗房间的玩家.
 
+	void AddFightServerUserCount(int iId,uint32_t iCount);			//某个战斗服务器增加人数
+
+	void DownFightServerUserCount(int iId,uint32_t iCount);			//某个战斗服务器减少人数
+
 private:
 
 	std::map<int,FightServerInfo> FightServerMap;

@@ -593,8 +593,8 @@ message CSFightHeroInfoListRsp
 
 message CSEnterFightMapRsp				//全部房间的人开始进入到战斗地图中。广播进入到战斗地图			
 {
-	optional uint32 MapId = 1;			//战斗地图ID
-	optional uint32 FightServerId = 2;	//战斗服务器ID，每个战斗服务器都会有独立的ID
+	optional int32 MapId = 1;			//战斗地图ID
+	optional int32 FightServerId = 2;	//战斗服务器ID，每个战斗服务器都会有独立的ID
 	optional CSFightHeroInfoListRsp HeroInfoListRsp= 3;//进入战斗场景所有玩家的参数必须要发给客户端 
 }
 

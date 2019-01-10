@@ -115,6 +115,7 @@ int MateWork::MateFetch(const CSMateFetchReq& rReq)
 		//没有任何等待的房间就要创建新的房间给该玩家
 		int RoomIndex = AskRoomIndex();
 		Room rRoom;
+		rRoom.TimeIndex = 0;
 		rRoom.UserCount = 0;
 		rRoom.Agree = 0;
 		rRoom.MaxCount = 5;					//五个人才开始游戏

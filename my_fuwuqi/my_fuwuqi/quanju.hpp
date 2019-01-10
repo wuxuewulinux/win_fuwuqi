@@ -113,6 +113,7 @@ struct ShowHeroRoom					//保存所有进入选英雄界面的玩家数据
 	int RoomIndex;					//英雄界面房间号
 	int TimeIndex;					//时间内存下标。每个房间都会申请一个时间内存。
 	int DiTuID;						//地图ID，因为会有很多种不同地图，会随机匹配一张战斗地图给玩家，读配置表
+	int FightServerID;				//该房间要连接的战斗服务器ID
 	std::vector<uint32_t> ZhaDanList;  //选择成功的炸弹类型压入到容器中，防止重复选择
 	std::vector<HeroInfo> HeroList;	//正在该英雄选择界面房间等待开始游戏的成员
 };

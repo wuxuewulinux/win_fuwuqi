@@ -97,18 +97,60 @@ FightServerInfo* FightServerConfig::GetFightServerById(int iFightServerId)
 
 int FightServerConfig::GetEmptyFightServerID()
 {
+	if (FightServerMap.size() == 0)
+	{
+		return -1;
+	}
+	std::map<int,FightServerInfo>::iterator iter;
 	if (FightServerMap.size() == 1)
 	{
 		//只有一个战斗服务器
-		std::map<int,FightServerInfo>::iterator iter = FightServerMap.begin();
+		iter = FightServerMap.begin();
 		if (iter == FightServerMap.end())
 		{
-			return -1;
+			return -2;
 		}
 		return iter->first;
 	}
 	//多个战斗服务器的情况，就要找出人数最少的哪个战斗服务器
+	iter = FightServerMap.begin();
+	uint32_t iUserCount = iter->second.UserCount;
+	int Id = iter->second.FightServerId;
+	++iter;
+	while (iter != FightServerMap.end())
+	{
+		if (iter->second.UserCount < iUserCount )
+		{
+			iUserCount = iter->second.UserCount;
+			Id = iter->second.FightServerId;
+		}
+		++iter;
+	}
+
+	return Id;
+}
 
 
-	return 0;
+
+void FightServerConfig::AddFightServerUserCount(int iId,uint32_t iCount)
+{
+	std::map<int,FightServerInfo>::iterator iter = FightServerMap.find(iId);
+	if (FightServerMap.end() == iter)
+	{
+		return;
+	}	
+	iter->second.UserCount = iter->second.UserCount + iCount;
+	return;
+}
+
+
+void FightServerConfig::DownFightServerUserCount(int iId,uint32_t iCount)
+{
+	std::map<int,FightServerInfo>::iterator iter = FightServerMap.find(iId);
+	if (FightServerMap.end() == iter)
+	{
+		return;
+	}	
+	iter->second.UserCount = iter->second.UserCount - iCount;
+	return;
 }
