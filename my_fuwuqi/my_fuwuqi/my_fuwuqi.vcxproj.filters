@@ -132,6 +132,12 @@
     <ClInclude Include="TimeConfig.hpp">
       <Filter>config</Filter>
     </ClInclude>
+    <ClInclude Include="MapConfig.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="fightServerConfig.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BagHandler.cpp">
@@ -254,6 +260,12 @@
     <ClCompile Include="TimeConfig.cpp">
       <Filter>config</Filter>
     </ClCompile>
+    <ClCompile Include="MapConfig.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="fightServerConfig.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="mingcheng.xml">
@@ -263,6 +275,12 @@
       <Filter>config_xml</Filter>
     </Xml>
     <Xml Include="GameTime.xml">
+      <Filter>config_xml</Filter>
+    </Xml>
+    <Xml Include="Map.xml">
+      <Filter>config_xml</Filter>
+    </Xml>
+    <Xml Include="FightServer.xml">
       <Filter>config_xml</Filter>
     </Xml>
   </ItemGroup>

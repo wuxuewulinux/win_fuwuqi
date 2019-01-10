@@ -98,7 +98,6 @@ struct HeroInfo
 	uint32_t DiPanId;		//飞机底盘ID
 	uint32_t SkillOneID;	//被动技能1特效ID
 	uint32_t SkillTwoID;	//被动技能2特效ID
-	uint32_t DiTuID;		//地图ID，因为会有很多种不同地图，会随机匹配一张战斗地图给玩家，读配置表
 	//战斗结束就需要计算
 	HeroVipInfo VipList[3];			//VipID(没有或者红，黄，紫色)最大拥有三种VIP
 	uint32_t Level;					//角色等级
@@ -110,8 +109,10 @@ struct HeroInfo
 
 struct ShowHeroRoom					//保存所有进入选英雄界面的玩家数据
 {
+	int MateRoomIndex;				//匹配成功的房间号，需要删除的匹配房间
 	int RoomIndex;					//英雄界面房间号
 	int TimeIndex;					//时间内存下标。每个房间都会申请一个时间内存。
+	int DiTuID;						//地图ID，因为会有很多种不同地图，会随机匹配一张战斗地图给玩家，读配置表
 	std::vector<uint32_t> ZhaDanList;  //选择成功的炸弹类型压入到容器中，防止重复选择
 	std::vector<HeroInfo> HeroList;	//正在该英雄选择界面房间等待开始游戏的成员
 };
@@ -176,5 +177,12 @@ struct ShowHeroRoom					//保存所有进入选英雄界面的玩家数据
 
 	extern int iHeroRoomIndex;							//申请英雄选择界面房间号，用来记录房间号和申请房间号会使用到
 
+	//匹配锁
+
+	extern pthread_mutex_t MateSuo;						//创建一个匹配锁，用来控制全局数据的访问
+
+	//控制随机数的全局变量
+
+	extern int g_is_first;
 
 #endif

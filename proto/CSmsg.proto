@@ -468,6 +468,7 @@ CSMateCmd_EnterHeroShow = 7;		//进入游戏选英雄界面的协议号，触发
 CSMateCmd_EnterHeroShowBag = 8;		//进入游戏选择英雄界面就有选择特效和皮肤功能。该协议全部包含所有的选择，带上类型和ID就可以了，除了炸弹背包外，该协议不处理炸弹背包
 CSMateCmd_SendUserHeroShow = 9;		//服务器返回哪个玩家选择哪种炸弹。服务器主动发送协议给客户端（Uid,炸弹ID），因为别人选择什么你都需要知道，然后你不可以在选了
 CSMateCmd_ShowZhaDanBag = 10;		//选择炸弹时就走这条协议，同样服务器也会返回数据回来给客户端。该协议如果回来就证明就选择这个炸弹成功了
+CSMateCmd_EnterFightMap = 11;		//全部房间的人开始进入到战斗地图中。广播进入到战斗地图(服务器主动向客户端发送协议)
 }
 
 message CSMateFetchReq				//点击匹配功能
@@ -574,6 +575,29 @@ message CSShowZhaDanBagRsp				//玩家选择炸弹
 	optional uint32 ZhadanId = 1;	
 }
 
+message CSFightHeroInfo					//进入到战斗场景时，需要了解对方的基本参数
+{
+	optional uint64 Uid = 1;
+	optional string Name = 2;
+	optional uint32 PlaneId = 3;
+	optional uint32 ZhaDanId = 4;
+	optional uint32 DiPanId = 5;
+	optional uint32 SkillOneID = 6;
+	optional uint32 SkillTwoID = 7;
+}
+
+message CSFightHeroInfoListRsp
+{
+	repeated CSFightHeroInfo HeroInfoList = 1;
+}
+
+message CSEnterFightMapRsp				//全部房间的人开始进入到战斗地图中。广播进入到战斗地图			
+{
+	optional uint32 MapId = 1;			//战斗地图ID
+	optional uint32 FightServerId = 2;	//战斗服务器ID，每个战斗服务器都会有独立的ID
+	optional CSFightHeroInfoListRsp HeroInfoListRsp= 3;//进入战斗场景所有玩家的参数必须要发给客户端 
+}
+
 message CSMateReqParam
 {
 	optional CSMateFetchReq MateFetchReq = 1;
@@ -590,6 +614,7 @@ message CSMateRspParam
 	optional CSEnterHeroShowRsp EnterHeroShowRsp = 1;
 	optional CSSendUserHeroShowRsp SendUserHeroShowRsp = 2;
 	optional CSShowZhaDanBagRsp ShowZhaDanBagRsp = 3;
+	optional CSEnterFightMapRsp EnterFightMapRsp = 4;
 }
 
 

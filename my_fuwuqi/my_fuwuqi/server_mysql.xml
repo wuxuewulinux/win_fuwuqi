@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="gb2312"?>
+<!--服务器配置表-->
 <root>
-
   <server>
     <data>
       <ip>192.168.146.129</ip>

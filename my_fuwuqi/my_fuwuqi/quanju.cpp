@@ -58,3 +58,11 @@ std::map<int,ShowHeroRoom> HeroRoomMap;			//等待英雄选择界面开始游戏的房间。
 std::stack<int> DeleteHeroRoomStack;			//保存所有被销毁的房间，相当于回收英雄选择界面房间号
 
 int iHeroRoomIndex = 0;
+
+//匹配
+
+pthread_mutex_t MateSuo;						//创建一个匹配锁，用来控制全局数据的访问
+
+//控制随机数的全局变量
+
+int g_is_first = 1;

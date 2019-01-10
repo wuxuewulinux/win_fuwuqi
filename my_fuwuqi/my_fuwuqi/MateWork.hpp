@@ -25,7 +25,7 @@ public:
 
 	static int SuccessButtonMateFetch(const CSSuccessButtonMateFetchReq& rReq);	//成功匹配够人数弹出同意和拒绝按钮，但是玩家选择同意按钮
 
-	static int EnterHeroShow(Room* PRoom);										//执行进入选英雄界面的操作
+	static int EnterHeroShow(Room* PRoom,int iDeleteRoomIndex);						//执行进入选英雄界面的操作
 
 	static int SendHeroInfo(CRoleObj* pRoleObj,int SockIo,uint64_t uUid,Room* pRoom);				//发送所在英雄界面的玩家数据给客户端
 

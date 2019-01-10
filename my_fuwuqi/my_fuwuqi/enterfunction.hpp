@@ -4,7 +4,10 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include "quanju.hpp"
+
 
 void gateway();         //启动服务器。
 
@@ -59,5 +62,19 @@ void DeleteShowHeroRoomIndex(int RoomIndex);	//销毁一个房间相当于回收一个房间号
 int GetTimeIndex(int Room_id,void (*p)(void * canshu),void * data);
 
 bool DeleteTimeIndex(int TimeIndex,int Room_id);
+
+//操作匹配锁
+
+void OpenMateSuo();
+
+void CloseMateSuo();
+
+//获取一个范围的随机数函数，包含参数值也在里面
+
+int Rand(int Min,int Max);
+
+//获取一张战斗地图
+
+uint32_t GetMapId();
 
 #endif // !_ENTERFUNCTION_HPP_

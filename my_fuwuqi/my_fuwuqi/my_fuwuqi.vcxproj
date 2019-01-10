@@ -24,10 +24,12 @@
     <ClInclude Include="enterfunction.hpp" />
     <ClInclude Include="epoll_ku.hpp" />
     <ClInclude Include="errornum.hpp" />
+    <ClInclude Include="fightServerConfig.hpp" />
     <ClInclude Include="Handler.hpp" />
     <ClInclude Include="HandlerList.hpp" />
     <ClInclude Include="logicconfigmanager.hpp" />
     <ClInclude Include="lognamespace.hpp" />
+    <ClInclude Include="MapConfig.hpp" />
     <ClInclude Include="MateHandler.hpp" />
     <ClInclude Include="MateWork.hpp" />
     <ClInclude Include="mingchengconfig.hpp" />
@@ -65,12 +67,14 @@
     <ClCompile Include="DecorateBagWork.cpp" />
     <ClCompile Include="enterfunction.cpp" />
     <ClCompile Include="epoll_ku.cpp" />
+    <ClCompile Include="fightServerConfig.cpp" />
     <ClCompile Include="gateway.cpp" />
     <ClCompile Include="Handler.cpp" />
     <ClCompile Include="HandlerList.cpp" />
     <ClCompile Include="logicconfigmanager.cpp" />
     <ClCompile Include="lognamespace.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapConfig.cpp" />
     <ClCompile Include="MateHandler.cpp" />
     <ClCompile Include="MateWork.cpp" />
     <ClCompile Include="mingchengconfig.cpp" />
@@ -95,7 +99,9 @@
     <ClCompile Include="UpdateData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="FightServer.xml" />
     <Xml Include="GameTime.xml" />
+    <Xml Include="Map.xml" />
     <Xml Include="mingcheng.xml" />
     <Xml Include="server_mysql.xml" />
   </ItemGroup>

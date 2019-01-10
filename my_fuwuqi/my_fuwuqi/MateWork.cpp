@@ -52,6 +52,7 @@ int MateWork::SendMateFetch(int SockIo,uint64_t Uid)
 
 int MateWork::MateFetch(const CSMateFetchReq& rReq)
 {
+	OpenMateSuo();		//申请锁
 	//给玩家匹配房间，先查看是否有空闲的房间
 	bool Falge = false;
 	if (RoomMap.size() > 0)
@@ -75,7 +76,11 @@ int MateWork::MateFetch(const CSMateFetchReq& rReq)
 					for (int i = 0; i < (int)iter->second.UidList.size();i++)
 					{
 						CRoleObj* pRoleObj = GetRole(iter->second.UidList[i].Uid);
-						HANDCHECH_P(pRoleObj,-1);
+						if (pRoleObj == NULL)
+						{
+							CloseMateSuo();
+							return -3;
+						}
 						SendMateFetch(pRoleObj->GetFd(),iter->second.UidList[i].Uid);
 						//压入定时器 10 秒，给你十秒时间去点击同意，如果时间到不点击就触发事件
 						//触发事件执行把不点击同意的玩家移除房间。
@@ -121,7 +126,7 @@ int MateWork::MateFetch(const CSMateFetchReq& rReq)
 		PushRoomMap(RoomIndex,&rRoom);
 		PushUserRoom(rReq.uid(),RoomIndex);
 	}
-
+	CloseMateSuo();			//释放锁
 	return 0;
 }
 
@@ -135,8 +140,12 @@ int MateWork::QuitMateFetch(const CSQuitMateFetchReq& rReq)
 	{
 		return -1;
 	}
-	DeleteUserRoom(rReq.uid());
 	Room* pRoom = GetRoomMap(RoomIndex);
+	if (pRoom->UserCount == 5 && pRoom->UidList.size() == 5)
+	{
+		return -5;
+	}
+	DeleteUserRoom(rReq.uid());
 	HANDCHECH_P(pRoom,-2);
 	--pRoom->UserCount;
 	for (std::vector<UidInfo>::iterator iter = pRoom->UidList.begin(); iter != pRoom->UidList.end(); iter++)
@@ -159,26 +168,34 @@ int MateWork::QuitMateFetch(const CSQuitMateFetchReq& rReq)
 
 int MateWork::NotButtonMateFetch(const CSNotButtonMateFetchReq& rReq)
 {
+	OpenMateSuo();		//申请锁
 	//找到该玩家的房间号，然后移除出去
 	int RoomIndex = GetUserRoom(rReq.uid());
 	if (RoomIndex == 0)
 	{
+		CloseMateSuo();		//释放锁
 		return -1;
 	}
-	DeleteUserRoom(rReq.uid());
 	Room* pRoom = GetRoomMap(RoomIndex);
-	HANDCHECH_P(pRoom,-2);
+	if (pRoom == NULL)
+	{
+		CloseMateSuo();		//释放锁
+		return -2;
+	}
 	pRoom->Agree = 0;
 	//防止同一个房间多个人同时点击拒绝。
-	if (pRoom->UserCount != 5 && pRoom->UidList.size() != 5)
+	if (pRoom->UserCount != 5 || pRoom->UidList.size() != 5)
 	{
+		CloseMateSuo();		//释放锁
 		return 0;
 	}
+	//发送关掉定时时间
+	TimeSend(false,pRoom->TimeIndex,0,pRoom->RoomIndex);
 	--pRoom->UserCount;
 	std::vector<UidInfo>::iterator iter = pRoom->UidList.begin();
 	while( iter != pRoom->UidList.end())
 	{
-		if (iter->Button == rReq.uid())
+		if (iter->Uid == rReq.uid())
 		{
 			//该玩家没有点击同意，把他从房间移除出去
 			DeleteUserRoom(iter->Uid);
@@ -191,6 +208,7 @@ int MateWork::NotButtonMateFetch(const CSNotButtonMateFetchReq& rReq)
 			CRoleObj* pRoleObj = GetRole(iter->Uid);
 			if (pRoleObj == NULL)
 			{
+				CloseMateSuo();		//释放锁
 				return -1;
 			}
 			MateWork::SendMateNotSuccess(pRoleObj->GetFd(),iter->Uid);
@@ -204,7 +222,7 @@ int MateWork::NotButtonMateFetch(const CSNotButtonMateFetchReq& rReq)
 		DeleteRoomMap(RoomIndex);
 		DeleteRoomIndex(RoomIndex);
 	}
-
+	CloseMateSuo();		//释放锁
 	return 0;
 }
 
@@ -232,7 +250,7 @@ int MateWork::SuccessButtonMateFetch(const CSSuccessButtonMateFetchReq& rReq)
 				TimeSend(false,pRoom->TimeIndex,0,pRoom->RoomIndex);		//先清除定时器时间
 				DeleteTimeIndex(pRoom->TimeIndex,pRoom->RoomIndex);
 				//该房间所有人都同意开始游戏，进入选英雄界面
-				EnterHeroShow(pRoom);
+				EnterHeroShow(pRoom,pRoom->RoomIndex);
 			}
 		}
 	}
@@ -356,13 +374,14 @@ int MateWork::SendHeroInfo(CRoleObj* pRoleObj,int SockIo,uint64_t uUid,Room* pRo
 }
 
 
-int MateWork::EnterHeroShow(Room* PRoom)
+int MateWork::EnterHeroShow(Room* PRoom,int iDeleteRoomIndex)
 {
 	HANDCHECH_P(PRoom,-1);
 	//创建一个游戏选英雄界面房间
 	int HeroRoomIndex = AskShowHeroRoomIndex();
 	ShowHeroRoom rHeroRoom;
 	rHeroRoom.RoomIndex = HeroRoomIndex;
+	rHeroRoom.MateRoomIndex = iDeleteRoomIndex;
 	PushShowHeroRoomMap(HeroRoomIndex,&rHeroRoom);
 	ShowHeroRoom* pHeroRoom = GetShowHeroRoomMap(HeroRoomIndex);
 	HANDCHECH_P(pHeroRoom,-1);
@@ -402,9 +421,6 @@ int MateWork::EnterHeroShow(Room* PRoom)
 		SendHeroInfo(pRole,pRole->GetFd(),iter->Uid,PRoom);
 	}
 	//进入选英雄界面，就要把该房间清除
-	int RoomIndex = PRoom->RoomIndex;
-	DeleteRoomMap(RoomIndex);
-	DeleteRoomIndex(RoomIndex);
 	//发送游戏选英雄界面定时器，规定多少时间给你去选英雄
 	pHeroRoom->TimeIndex = GetTimeIndex(pHeroRoom->RoomIndex,Time_MateShowHeroFetch,pHeroRoom); //申请定时器
 	int TimeValue = LOGIC_CONFIG->GetTimeConfig().GetMateShowHeroFetchTime();					//读取配置时间

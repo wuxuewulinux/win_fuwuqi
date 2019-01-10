@@ -33,7 +33,7 @@ int TimeConfig::InitMateShowHeroFetchConfig(TiXmlElement *RootElement)
 	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
 	while (NULL != dataElement)
 	{
-		if (!GetSubNodeValue(dataElement, "MateShowHeroFetch", MateShowHeroTime) || MateShowHeroTime < 0 )
+		if (!GetSubNodeValue(dataElement, "MateShowHeroFetchTime", MateShowHeroTime) || MateShowHeroTime < 0 )
 		{
 			return -1;
 		}

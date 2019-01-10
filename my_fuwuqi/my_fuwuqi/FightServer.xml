@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!--所有战斗服务器配置表-->
+<root>
+	<FightServer>
+		<data>
+			<fight_server_id>1</fight_server_id>
+			<fight_server_ip>192.168.146.129</fight_server_ip>
+			<fight_server_port>5090</fight_server_port>
+		</data>
+		<data>
+			<fight_server_id>2</fight_server_id>
+			<fight_server_ip>192.168.146.129</fight_server_ip>
+			<fight_server_port>5091</fight_server_port>
+		</data>
+		<!--如果需要增加战斗服务器就在这里添加-->
+	</FightServer>
+</root>

@@ -49,6 +49,22 @@ bool LogicConfigManager::Init(std::string Path)
 		}
 	}
 
+	//地图模块配置
+	{
+		if (!m_oMapConfig.Init(Path + "Map.xml"))   
+		{
+			return false;
+		}
+	}
+
+	//战斗服务器配置
+	{
+		if (!m_oFightServerConfig.Init(Path + "FightServer.xml"))   
+		{
+			return false;
+		}
+	}
+
 	//如果还有其他模块的配置可以在这里扩展代码
 
 	return true;

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!--所有地图的配置表-->
+<root>
+	<MateMap>
+		<data>
+			<map_id>1</map_id>
+			<map_name>寒冷之地</map_name>
+		</data>
+	</MateMap>
+</root>

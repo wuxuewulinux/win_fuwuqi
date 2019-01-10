@@ -1,6 +1,8 @@
 
 #include "enterfunction.hpp"
 #include "lognamespace.hpp"
+#include "quanju.hpp"
+#include "logicconfigmanager.hpp"
 
 CRoleObj * GetRole(uint64_t Uid)
 {
@@ -198,4 +200,35 @@ int GetTimeIndex(int Room_id,void (*p)(void * canshu),void * data)
 bool DeleteTimeIndex(int TimeIndex,int Room_id)
 {
 	return timelei.endgame(TimeIndex,Room_id);
+}
+
+
+//²Ù×÷Æ¥ÅäËø
+
+void OpenMateSuo()		
+{
+	pthread_mutex_lock(&MateSuo);
+	return;
+}
+
+void CloseMateSuo()
+{
+	pthread_mutex_unlock(&MateSuo);
+	return;
+}
+
+
+int Rand(int Min,int Max)
+{
+	if (g_is_first) {  
+		g_is_first = 0;  
+		srand((unsigned int)time(NULL));  
+	}  
+	return (int)((double)rand() / ((RAND_MAX + 1.0) / (Max - Min + 1.0)) + Min);
+}
+
+
+uint32_t GetMapId()
+{
+	return (uint32_t)Rand(1,LOGIC_CONFIG->GetMapConfig().GetMaxValue());
 }

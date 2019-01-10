@@ -132,6 +132,11 @@ void* MateHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int CmdTyp
 		CSShowZhaDanBagRsp * pShowZhaDanBagRsp = pReqParam->mutable_showzhadanbagrsp();
 		return (void*)pShowZhaDanBagRsp;
 	}
+	else if (CmdType == CSMateCmd_EnterFightMap)
+	{
+		CSEnterFightMapRsp * pEnterFightMapRsp = pReqParam->mutable_enterfightmaprsp();
+		return (void*)pEnterFightMapRsp;
+	}
 	return NULL;
 }
 
@@ -191,6 +196,8 @@ int MateHandler::OnMateFetchReq(const CSMsg& rCSMsg, int iFd)
 int MateHandler::OnQuitMateFetchReq(const CSMsg& rCSMsg, int iFd)
 {
 	const CSQuitMateFetchReq& Req = rCSMsg.body().matereq().reqparam().quitmatefetchreq();
+	CSMsg oCSMsg;
+	MateHandler::OnCSMsg(oCSMsg, rCSMsg.head().uid(), CS_MSGID_Mate, CSMateCmd_QuitMateFetch);
 	int iRet = MateWork::QuitMateFetch(Req);
 	if (iRet < 0)
 	{
@@ -198,7 +205,11 @@ int MateHandler::OnQuitMateFetchReq(const CSMsg& rCSMsg, int iFd)
 		MYLOG.sprintf(BUFF,"MateWork QuitMateFetch error : %d",iRet);
 		return -3;
 	}
-
+	if (iRet == 0)
+	{
+		//点击退出匹配时，必须收到服务器的信号客户端才能退出匹配
+		SendClient(iFd,&oCSMsg);
+	}
 	return iRet;
 }
 
