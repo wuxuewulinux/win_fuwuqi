@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="gb2312"?>
+<root>
+<!--战斗服务器配置-->
+  <FightServer>
+		<data>
+			<ip>192.168.146.129</ip>
+			<port>5081</port>
+		</data>
+  </FightServer>
+	<!--游戏服务器配置-->
+	<GameServer>
+		<data>
+			<ip>192.168.146.129</ip>
+			<port>5050</port>
+		</data>
+	</GameServer>
+
+</root>

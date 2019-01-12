@@ -26,7 +26,7 @@ timeku::timeku()
 
 	rongqi.resize(100);    //先固定好时间节点内存，先给100，如果不够还可以继续增加
 
-	for(int i=0;i<100;i++)
+	for(int i=1;i<100;i++)
 	{
 		index_stack.push(i);   //把所有空闲的内存下标压入栈中
 	}

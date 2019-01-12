@@ -27,12 +27,15 @@ CHandlerList * CHandlerList::Instance()
 
 int CHandlerList::Init()  //把Handler压到m_apCSHandler数组中。
 {
+	//客户端与服务器
 	RegisterHandler(CS_MSGID_RegisterLogin,		&m_oRegisterLoginHandler);
 	RegisterHandler(CS_MSGID_BAG,		&m_oBagHandler);
 	RegisterHandler(CS_MSGID_DecorateBAG,&m_oDecorateBagHandler);
 	RegisterHandler(CS_MSGID_Chat,&m_oChatHandler);
 	RegisterHandler(CS_MSGID_Mate,&m_oMateHandler);
-
+	//服务器与服务器
+	RegisterHandler(SS_MSGID_GameMysql,&m_oRegisterLoginHandler);
+	RegisterHandler(SS_MSGID_FightServer,&m_oMateHandler);
 	return 0;
 }
 

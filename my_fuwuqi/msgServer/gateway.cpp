@@ -34,10 +34,10 @@ if(!LOGIC_CONFIG->Init("/home/wuxuewu/msgServer/config_xml/"))
 	return;
 
 //开始连接mysql数据库和初始化mysql库类
-struct my_mysql * pMysql = LOGIC_CONFIG->GetServerMysqlConfig().GetMysqlConfig();	//获取mysql数据库基本信息
+struct my_mysql * pMysql = LOGIC_CONFIG->GetMsgServerConfig().GetMysqlConfig();	//获取mysql数据库基本信息
 if(MYSQLKU->InitMysql(pMysql->user,pMysql->mima,pMysql->database,pMysql->table) < 0)//连接数据库
 	return;
-const struct MysqlServer * test = LOGIC_CONFIG->GetServerMysqlConfig().GetMysqlServerConfig(); //获取mysql服务器IP和端口
+const struct msgServer * test = LOGIC_CONFIG->GetMsgServerConfig().GetMsgServerConfig(); //获取服务器IP和端口
 // TCP/IP启动
 Socket_Ku socket_lei(test->ip.c_str(),test->port);
 if(socket_lei.socket_creat() < 0)

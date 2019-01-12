@@ -17,7 +17,32 @@ MateHandler::~MateHandler()
 
 int MateHandler::OnServerMsg(const SSMsg& rSSMsg)
 {
+	int iRet = -1;
+	iRet = OnCheckSSMsg(rSSMsg, SS_MSGID_FightServer);
+	if (iRet < 0)
+	{
+		//日志输出
+		printf("MateHandler OnCheckSSMsg : %d",iRet);
+		MYLOG.sprintf(BUFF,"MateHandler OnCheckSSMsg : %d",iRet);
+		return -1;
+	}
 
+	const SSFightServerReq &req = rSSMsg.body().fightserverreq();
+	switch (req.cmd())
+	{
+	case SSFightServerCmd_FightEnd:					//战斗服务器战斗结束就要把该局的战斗结果发送给游戏服务器
+		{
+			iRet = OnFightEndReq(rSSMsg);
+		}
+		break;
+	default:
+		iRet = -1;
+	}
+	if (iRet < 0)
+	{
+		printf("MateHandler OnServerMsg error : %d",iRet);
+		MYLOG.sprintf(BUFF,"MateHandler OnServerMsg error : %d",iRet);
+	}
 
 	return 0;
 }
@@ -143,7 +168,29 @@ void* MateHandler::OnCSMsg(CSMsg& rMsg, uint64_t Uid, CSMsgID eMsgId, int CmdTyp
 
 int MateHandler::OnCheckSSMsg(const SSMsg& rMsg, SSMsgID eMsgId)
 {
-
+	if ( !rMsg.has_head())
+	{
+		return -1;
+	}
+	const SSMsgHead& rHead= rMsg.head();
+	if ( ! (rHead.has_uid()) || ! rHead.has_msgid())
+	{
+		return -2;
+	}
+	if ( (!rMsg.has_body()) )
+	{
+		return -3;
+	}
+	if (rHead.has_msgid() != eMsgId)
+	{
+		return -4;
+	}
+	const SSMsgBody& rBody = rMsg.body();
+	const SSFightServerRsp& rTmp = rBody.fightserverrsp();
+	if ( !(rTmp.has_cmd()) || !(rTmp.has_rspparam()))
+	{
+		return -5;
+	}
 
 	return 0;
 }
@@ -278,4 +325,13 @@ int MateHandler::OnShowZhaDanBagReq(const CSMsg& rCSMsg, int iFd)
 		SendClient(iFd,&oCSMsg);
 	}
 	return iRet;
+}
+
+
+
+int MateHandler::OnFightEndReq(const SSMsg& rSSMsg)
+{
+	//以后在封装
+
+	return 0;
 }

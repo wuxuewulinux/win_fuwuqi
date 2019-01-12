@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{e3a5bf20-8aa2-4e29-9d42-db51dda3424e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{4e402864-1707-4147-bc2a-747fa6d964fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config_xml">
+      <UniqueIdentifier>{417419c5-573c-4e21-8924-2680333d71a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="xmlnodeconfig.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="logicconfigmanager.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="serverconfig.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="tinystr.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml.hpp">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="type.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="enterfunction.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="epoll_ku.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="FightServerHandler.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="FightServerWork.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="Handler.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="HandlerList.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="lognamespace.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="pthreadstart.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="quanju.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="readn.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="sendclient.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="socketku.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="timeku.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="txtlog.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketGameClient.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="logicconfigmanager.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="serverconfig.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="tinystr.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxmlerror.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxmlparser.cpp">
+      <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="enterfunction.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="epoll_ku.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="FightServerHandler.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="FightServerWork.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gateway.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="Handler.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="HandlerList.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="lognamespace.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="pthreadstart.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="quanju.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="readn.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="sendclient.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="socketku.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="timeku.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="txtlog.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketGameClient.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="FightServer.xml">
+      <Filter>config_xml</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

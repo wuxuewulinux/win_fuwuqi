@@ -59,9 +59,9 @@ void DeleteShowHeroRoomIndex(int RoomIndex);	//销毁一个房间相当于回收一个房间号
 
 //调用定时器接口
 
-int GetTimeIndex(int Room_id,void (*p)(void * canshu),void * data);
+int GetTimeIndex(int Room_id,void (*p)(void * canshu),void * data);			//获取定时器下标内存地址
 
-bool DeleteTimeIndex(int TimeIndex,int Room_id);
+bool DeleteTimeIndex(int TimeIndex,int Room_id);							//释放定时器下标内存地址
 
 //操作匹配锁
 

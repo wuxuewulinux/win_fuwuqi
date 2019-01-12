@@ -2,6 +2,9 @@
 #ifndef _TIMEEVENT_HPP_
 #define _TIMEEVENT_HPP_
 
+#include "RoleObj.hpp"
+#include "quanju.hpp"
+
 //该文件是封装所有定时器触发事件时执行的函数
 
 void Time_MateFetch(void * Data);			//匹配界面触发。当弹出匹配成功进入游戏，10秒内有玩家不点击同意就会触发事件

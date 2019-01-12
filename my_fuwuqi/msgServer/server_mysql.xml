@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="gb2312"?>
 <root>
 
-  <mysqlserver>
+  <MsgServer>
 		<data>
 			<ip>192.168.146.129</ip>
 			<port>5070</port>
 		</data>
-  </mysqlserver>
+  </MsgServer>
 	
   <mysql>
     <data>

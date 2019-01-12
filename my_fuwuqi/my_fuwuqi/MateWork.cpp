@@ -100,6 +100,7 @@ int MateWork::MateFetch(const CSMateFetchReq& rReq)
 			rRoom.RoomIndex = RoomIndex;
 			rRoom.UserCount = 0;
 			rRoom.Agree = 0;
+			rRoom.TimeIndex = 0;
 			rRoom.MaxCount = 5;					//五个人才开始游戏
 			++rRoom.UserCount;
 			UidInfo rInfo;
@@ -192,6 +193,8 @@ int MateWork::NotButtonMateFetch(const CSNotButtonMateFetchReq& rReq)
 	}
 	//发送关掉定时时间
 	TimeSend(false,pRoom->TimeIndex,0,pRoom->RoomIndex);
+	DeleteTimeIndex(pRoom->TimeIndex,pRoom->RoomIndex);
+	pRoom->TimeIndex = 0;
 	--pRoom->UserCount;
 	std::vector<UidInfo>::iterator iter = pRoom->UidList.begin();
 	while( iter != pRoom->UidList.end())

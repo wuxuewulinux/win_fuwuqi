@@ -30,7 +30,7 @@ public:
 
 	bool Init(std::string Path);
 
-	ServerConfig & GetServerMysqlConfig(){return server_mysql;}
+	ServerConfig & GetMsgServerConfig(){return server_mysql;}
 
 private:
 	LogicConfigManager();

@@ -147,8 +147,8 @@ void Time_MateShowHeroFetch(void * Data)
 	//删除英雄选择界面定时器
 	TimeSend(false,rUserRoom->TimeIndex,0,rUserRoom->RoomIndex);		//先清除定时器时间
 	DeleteTimeIndex(rUserRoom->TimeIndex,rUserRoom->RoomIndex);
-	//删除一个选择英雄界面房间
-	DeleteShowHeroRoomMap(rUserRoom->RoomIndex);
+	//删除一个选择英雄界面房间,不能在这里删除，必须等待该房间战斗结束，战斗服务器返回才能删除房间，不然有可能两个战场的房间号一样
+	//DeleteShowHeroRoomMap(rUserRoom->RoomIndex);
 	return;
 }
 
@@ -163,6 +163,7 @@ int SendHeroEnterFight(CRoleObj* pRoleObj,int SockIo,uint64_t uUid,ShowHeroRoom*
 
 	Rsp->set_mapid(pRoom->DiTuID);
 	Rsp->set_fightserverid(pRoom->FightServerID);
+	Rsp->set_roomindex(pRoom->RoomIndex);
 	CSFightHeroInfoListRsp* pFightHeroInfoListRsp = Rsp->mutable_heroinfolistrsp();
 	HANDCHECH_P(pFightHeroInfoListRsp,-2);
 	for (int i = 0;i < (int)pRoom->HeroList.size();i++)

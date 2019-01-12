@@ -68,17 +68,17 @@ bool ServerConfig::Init(std::string configname)
 	
 	//读取mysql服务器的IP地址和端口号
 	{
-		TiXmlElement *server_element = RootElement->FirstChildElement("mysqlserver");
+		TiXmlElement *server_element = RootElement->FirstChildElement("MsgServer");
 		if (NULL == server_element)
 		{
 			std::cout<<": no [server]."<<std::endl;
 			return false;
 		}
 
-		iRet = InitMysqlServerConfigg(server_element);
+		iRet = InitMsgServerConfigg(server_element);
 		if (iRet)
 		{
-			std::cout<<"InitMysqlServerConfigg failed : "<<std::cout<<iRet<<std::endl;;
+			std::cout<<"InitMsgServerConfigg failed : "<<std::cout<<iRet<<std::endl;;
 
 			return false;
 		}
@@ -92,19 +92,19 @@ bool ServerConfig::Init(std::string configname)
 
 
 
-int ServerConfig::InitMysqlServerConfigg(TiXmlElement *RootElement)
+int ServerConfig::InitMsgServerConfigg(TiXmlElement *RootElement)
 {
 
 	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
 	while (NULL != dataElement)
 	{
 		
-		if (!GetSubNodeValue(dataElement, "ip", mMysqlServer.ip) || mMysqlServer.ip.empty())
+		if (!GetSubNodeValue(dataElement, "ip", m_msgServer.ip) || m_msgServer.ip.empty())
 		{
 			return -1;
 		}
 
-		if (!GetSubNodeValue(dataElement, "port", mMysqlServer.port) || mMysqlServer.port < 0 )
+		if (!GetSubNodeValue(dataElement, "port", m_msgServer.port) || m_msgServer.port < 0 )
 		{
 			return -2;
 		}

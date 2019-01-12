@@ -5,6 +5,10 @@ import "DBmsg.proto";	//引用要保存到数据库结构的proto文件，该文
 
 //重点: Req表示数据库服务器需要，Rsp表示游戏服务器需要
 
+
+
+////////////////////////////////////////////////////////////////////////////游戏服务器与数据库服务器///////////////////////////////////////////////////////////////////////////////////////
+
 enum SSRegisterLoginCmd
 {
 	//填写每个模块的子功能枚举ID号
@@ -80,9 +84,54 @@ message SSRegisterLoginReq	//把模块所有结果或者数据整合起来（服
 message SSRegisterLoginRsp									//把模块所有结果或者数据整合起来（客户端需要的)
 {
 	optional int32 result = 1;								//模块的错误码提示（只有客户端才多一个错误码)
-	required SSRegisterLoginCmd cmd = 2;  						//模块功能的ID号
-	optional SSRegisterLoginRspParam rspParam = 3 ;  			//模块的所有子功能结构体数据都保存在该结果中
+	required SSRegisterLoginCmd cmd = 2;  					//模块功能的ID号
+	optional SSRegisterLoginRspParam rspParam = 3 ;  		//模块的所有子功能结构体数据都保存在该结果中
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////游戏服务器与数据库服务器///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////////////////////////////////////////////////////游戏服务器与战斗服务器///////////////////////////////////////////////////////////////////////////////////////
+
+enum SSFightServerCmd
+{
+	//模块执行的功能枚举
+	SSFightServerCmd_FightEnd = 1;				//战斗结束协议，战斗服务器就应该发送结果给游戏服务器		
+
+}
+
+//数据协议在这里填写
+
+message SSFightServerReqParam
+{
+
+}
+
+message SSFightServerRspParam
+{
+
+}
+
+
+message SSFightServerReq
+{
+	required SSFightServerCmd  cmd = 1;					//模块功能的ID号
+	optional SSFightServerReqParam reqParam = 2;			//模块的所有子功能结构体数据都保存在该结果中
+}
+
+
+message SSFightServerRsp									//把模块所有结果或者数据整合起来（客户端需要的)
+{
+	optional int32 result = 1;								//模块的错误码提示（只有客户端才多一个错误码)
+	required SSFightServerCmd cmd = 2;  					//模块功能的ID号
+	optional SSFightServerRspParam rspParam = 3 ;  			//模块的所有子功能结构体数据都保存在该结果中
+}
+
+////////////////////////////////////////////////////////////////////////////游戏服务器与战斗服务器///////////////////////////////////////////////////////////////////////////////////////
 
 
 enum SSMsgID
@@ -91,11 +140,13 @@ enum SSMsgID
 	
 	SS_MSGID_MIN = 1000;
 	
-	SS_MSGID_GameMysql = 1001; 	//游戏服务器与数据库服务器通信和聊天服务器通信的模块，该模块包含所有功能.
+	SS_MSGID_GameMysql = 1001; 			//游戏服务器与数据库服务器通信和聊天服务器通信的模块，该模块包含所有功能.
+	
+	SS_MSGID_FightServer = 1002;		//战斗服务器与游戏服务器通信模块
 	
 	//如果还有别的模块就这里进行扩展
 	
-	SS_MSGID_MAX = 1002;
+	SS_MSGID_MAX = 1003;
 }
 
 
@@ -105,6 +156,9 @@ message SSMsgBody
 	
 	optional SSRegisterLoginReq RegisterLoginReq = 1;
 	optional SSRegisterLoginRsp RegisterLoginRsp = 2;
+	
+	optional SSFightServerReq FightServerReq = 3;
+	optional SSFightServerRsp FightServerRsp = 4;
 }
 
 

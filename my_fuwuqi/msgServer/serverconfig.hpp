@@ -13,7 +13,7 @@ struct my_server
 };
 
 
-struct MysqlServer
+struct msgServer
 {
 	std::string ip;             //获取服务器IP地址
 
@@ -39,17 +39,17 @@ public:
 	ServerConfig();
 	~ServerConfig();
 
-	bool Init(std::string configname);     //这个函数所有配置类都会声明一样的
+	bool Init(std::string configname);										//这个函数所有配置类都会声明一样的
 
-	int InitMysqlServerConfigg(TiXmlElement *RootElement);    //读取mysql服务器配置信息
+	int InitMsgServerConfigg(TiXmlElement *RootElement);					//读取mysql服务器配置信息
 
-	int InitMysqlConfigg(TiXmlElement *RootElement);    //读取数据库的配置信息
+	int InitMysqlConfigg(TiXmlElement *RootElement);						//读取数据库的配置信息
 	
-	int InitMysqlTableConfigg(TiXmlElement *RootElement);    //读取数据库中所有表的配置信息
+	int InitMysqlTableConfigg(TiXmlElement *RootElement);					//读取数据库中所有表的配置信息
 
-	struct my_mysql * GetMysqlConfig(){return &mysql;}    //获取数据库所有配置信息（表，用户名，密码等等的配置)
+	struct my_mysql * GetMysqlConfig(){return &mysql;}						//获取数据库所有配置信息（表，用户名，密码等等的配置)
 
-	struct MysqlServer * GetMysqlServerConfig(){return &mMysqlServer;}    //获取mysql服务器配置信息(IP地址和端口号）
+	struct msgServer * GetMsgServerConfig(){return &m_msgServer;}			//获取聊天服务器配置信息(IP地址和端口号）
 
 	
 
@@ -58,7 +58,7 @@ private:
 
 	struct my_mysql mysql;
 
-	struct MysqlServer mMysqlServer;
+	struct msgServer m_msgServer;
 	
 };
 
