@@ -3,6 +3,7 @@
 #include "enterfunction.hpp"
 #include "epoll_ku.hpp"
 #include "../proto/DBmsg.pb.h"
+#include "MateWork.hpp"
 
 /*
 登陆和注册还没有role类的出现
@@ -42,6 +43,11 @@ int RegisterLoginWork::QuitReq(CRoleObj* pRoleObj,SSQuitReq* pReq,int Fd,uint64_
 //退出有两种情况，一种是还没有登录角色进游戏，一种是已经登陆角色在游戏
    if(UID > 0)
   {
+	if (0 < GetUserRoom(UID))
+	{
+		//客户端还在匹配队列中，所以一定要移除
+		MateWork::QuitGame(UID,GetUserRoom(UID));
+	}
 	DBRoleInfo rRoleInfo;
 	pRoleObj->GenDBRoleInfo(&rRoleInfo);			//把role来的数据全部给拉取到rRoleInfo协议结构中.
 	pReq->set_allocated_role(&rRoleInfo);

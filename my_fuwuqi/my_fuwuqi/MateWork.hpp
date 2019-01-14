@@ -35,6 +35,8 @@ public:
 
 	static int SendUserShowZhaDan(CRoleObj* pRoleObj,uint64_t UserUid,uint64_t Uid,uint32_t ZhaDanId);		//广播给所有玩家该玩家选择该炸弹了
 
+	static int QuitGame(uint64_t Uid,int RoomIndex);			//退出游戏时玩家还在匹配列表中
+
 private:
 
 };

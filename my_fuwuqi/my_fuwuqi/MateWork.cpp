@@ -550,3 +550,28 @@ int MateWork::ShowZhaDanBag(const CSShowZhaDanBagReq& rReq,CSShowZhaDanBagRsp* p
 	}
 	return 0;
 }
+
+
+
+
+int MateWork::QuitGame(uint64_t Uid,int RoomIndex)
+{
+	OpenMateSuo();
+	DeleteUserRoom(Uid);
+	Room* pRoom = GetRoomMap(RoomIndex);
+	if (pRoom == NULL)
+	{
+		CloseMateSuo();
+		return 0;
+	}
+	for (std::vector<UidInfo>::iterator iter = pRoom->UidList.begin();iter != pRoom->UidList.end();iter++)
+	{
+		if (Uid == iter->Uid)
+		{
+			pRoom->UidList.erase(iter);
+			break;
+		}
+	}
+	CloseMateSuo();
+	return 0;
+}

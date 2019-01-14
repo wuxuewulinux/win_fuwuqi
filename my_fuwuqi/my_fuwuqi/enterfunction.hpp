@@ -65,9 +65,9 @@ bool DeleteTimeIndex(int TimeIndex,int Room_id);							//释放定时器下标内存地址
 
 //操作匹配锁
 
-void OpenMateSuo();
+void OpenMateSuo();								//获取锁
 
-void CloseMateSuo();
+void CloseMateSuo();							//释放锁
 
 //获取一个范围的随机数函数，包含参数值也在里面
 
