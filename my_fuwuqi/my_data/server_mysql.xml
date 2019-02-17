@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="gb2312"?>
 <root>
-
+<!--mysql数据库配置信息拿到IP地址和端口-->
   <mysqlserver>
 		<data>
-			<ip>192.168.146.129</ip>
+			<ip>192.168.136.129</ip>
 			<port>5060</port>
 		</data>
   </mysqlserver>
-	
+  <!--redis数据库配置信息拿到IP地址和端口-->
+  <RedisServer>
+		<data>
+			<ip>127.0.0.1</ip>
+			<port>6379</port>
+		</data>
+  </RedisServer>
+	<!--游戏重要数据的数据库配置信息（xiangmu数据库)-->
   <mysql>
     <data>
       <mysql_user>wuxuewu</mysql_user>
@@ -21,5 +28,21 @@
       <table>Server</table>
     </data>
   </mysqltable>
+  
+<!--游戏记录用户消费流水的数据的数据库配置信息（ZhangDan数据库)-->
+  <BillMysql>
+    <data>
+      <bill_mysql_user>wuxuewu</bill_mysql_user>
+      <bill_mysql_mima>297517590</bill_mysql_mima>
+      <bill_mysql_database>ZhangDan</bill_mysql_database>
+    </data>
+  </BillMysql>
+<!--ZhangDan数据库要访问的表：钻石流水表和金币流水表-->
+  <bill_mysql_table>
+    <data>
+      <DiamondBill_table>DiamondBill</DiamondBill_table>
+      <GoldBill_table>GoldBill</GoldBill_table>
+    </data>
+  </bill_mysql_table>
   
 </root>

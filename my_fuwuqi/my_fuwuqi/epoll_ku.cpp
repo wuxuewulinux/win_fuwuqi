@@ -77,8 +77,8 @@ void Epoll_Ku::Epoll_Wait(Socket_Ku * socket_t)
 				//防止死锁出现
 				pthread_mutex_lock(&readsuo);
 				pthread_mutex_unlock(&readsuo);
-				conn=eventts[i].data.fd;                      
-				readduilie.push(conn);               //把该客户端IO压入队列中，让读线程去处理        
+				conn=eventts[i].data.fd; 
+				readduilie.push(conn);               //把该客户端IO压入队列中，让读线程去处理 
 				pthread_cond_signal(&readcode);      //发送信号
 			}
 			else 

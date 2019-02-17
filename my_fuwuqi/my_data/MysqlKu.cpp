@@ -53,7 +53,7 @@ int MysqlKu::InitMysql(string user,string mima,string databases,vector<string> &
 int MysqlKu::Login(const string & zhanghu,const string & mima)
 {
 	int t;
-	int uid;
+	uint64_t uid;
 	string write_mima;
 	string str="select Uid,mima from "+table[0]+" where zhanghu='";
 	str=str+zhanghu+"';";
@@ -96,7 +96,7 @@ int MysqlKu::Login(const string & zhanghu,const string & mima)
 
 
 
-string MysqlKu::GetName(int Uid)
+string MysqlKu::GetName(uint64_t Uid)
 {
 	int t;
 	string str="select name from "+table[0]+" where Uid='";
@@ -126,7 +126,7 @@ string MysqlKu::GetName(int Uid)
 
 
 
-string MysqlKu::GetDBRole(int Uid)
+string MysqlKu::GetDBRole(uint64_t Uid)
 {
 	int t;
 	string str="select role from "+table[0]+" where Uid=";
@@ -155,7 +155,7 @@ string MysqlKu::GetDBRole(int Uid)
 
 
 
-void MysqlKu::ChangeDBRole(string & rDBRole,int Uid)
+void MysqlKu::ChangeDBRole(string & rDBRole,uint64_t Uid)
 {
 	int t;
 	string str="update "+table[0]+" set role='"+rDBRole;
@@ -172,6 +172,58 @@ void MysqlKu::ChangeDBRole(string & rDBRole,int Uid)
 	return;
 }
 
+
+
+void MysqlKu::ChangeDiamond(int Diamond ,uint64_t Uid)
+{
+	int t;
+	string str="update "+table[0]+" set Diamond="+to_string(Diamond);
+	str=str+" where Uid="+to_string(Uid)+";";
+	t=mysql_query(&mysql,str.c_str());
+	if(t)
+	{
+		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("ChangeDBRole : Error1 making query");
+	}
+	res = mysql_use_result(&mysql);
+	mysql_free_result(res);
+
+	return;
+}
+
+
+void MysqlKu::ChangeGole(int Gold ,uint64_t Uid)
+{
+	int t;
+	string str="update "+table[0]+" set Gold="+to_string(Gold);
+	str=str+" where Uid="+to_string(Uid)+";";
+	t=mysql_query(&mysql,str.c_str());
+	if(t)
+	{
+		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("ChangeDBRole : Error1 making query");
+	}
+	res = mysql_use_result(&mysql);
+	mysql_free_result(res);
+
+	return;
+}
+
+
+void MysqlKu::ChangeLoginTime(uint64_t Uid,int Type)
+{
+	int t;
+	string str="call LoginChangeTime("+to_string(Uid)+","+to_string(Type)+");";
+	t=mysql_query(&mysql,str.c_str());
+	if(t)
+	{
+		printf("Error making query:%s\n",mysql_error(&mysql));
+		MYLOG.printflog("ChangeDBRole : Error1 making query");
+	}
+	res = mysql_use_result(&mysql);
+	mysql_free_result(res);
+	return;
+}
 
 int MysqlKu::Register(const string & zhanghu,const string & mingzi)
 {
@@ -212,36 +264,6 @@ int MysqlKu::Register(const string & zhanghu,const string & mingzi)
 	return 3;
 }
 
-/*
-int MysqlKu::GetJiFen(const string & zhanghu)
-{
-	int t;
-	string str="select jifen from "+table[0]+" where zhanghu='";
-	str=str+zhanghu+"';";
-	t=mysql_query(&mysql,str.c_str());
-	if(t)
-	{
-		printf("Error making query:%s\n",mysql_error(&mysql));
-	}
-
-	res = mysql_use_result(&mysql);
-	if(res)
-	{
-		while((row = mysql_fetch_row(res)))
-		{
-			for(t=0;t<mysql_num_fields(res);t++)
-			{
-				t=atoi(row[t]);
-				mysql_free_result(res);
-				return t;
-			}
-			printf("\n");
-		}
-	}
-	return 0;
-}
-*/
-
 
 void MysqlKu::InsertAccount(const string & zhanghu,const string & mingzi,const string & mima,const string & DBRole)
 {
@@ -260,43 +282,7 @@ void MysqlKu::InsertAccount(const string & zhanghu,const string & mingzi,const s
 }
 
 
-/*
-void MysqlKu::ChangeJiFen(int jifen,const string & zhanghu)
-{
-	int t;
-	char s[10];
-	sprintf(s,"%d",jifen);
-	string str="update "+table[0]+" set jifen="+s;
-	str=str+" where zhanghu='"+zhanghu+"';";
-	t=mysql_query(&mysql,str.c_str());
-	if(t)
-	{
-		printf("Error making query:%s\n",mysql_error(&mysql));
-	}
-	mysql_free_result(res);
-}
-*/
-
-/*
-先屏蔽掉，元宝或金币日志。
-void MysqlKu::InsertGoldLog(const struct goldlog & gold_log)
-{
-	timename[timename.size()-1]=' ';
-	string begingold=to_string(gold_log.begingold);
-	string lastgold=to_string(gold_log.lastgold);
-	string str="insert into "+table+" (datetime,zhanghao,homename,begingold,lastgold) values ('";
-	str=str+timename+"','"+gold_log.zhanghao+"','"+gold_log.homename+"',"+begingold+","+lastgold+");";
-	t=mysql_query(&mysql,str.c_str());
-	if(t)
-	{
-		printf("Error making query:%s\n",mysql_error(&mysql));
-	}
-	mysql_free_result(res);
-
-}
-*/
-
-bool MysqlKu::FindUid(int userid)
+bool MysqlKu::FindUid(uint64_t userid)
 {
 	set<int>::iterator itera=uid_rongqi.find(userid);
 	if(itera != uid_rongqi.end())
@@ -307,10 +293,10 @@ bool MysqlKu::FindUid(int userid)
 
 
 
-void MysqlKu::PopUid(int userid)
+void MysqlKu::PopUid(uint64_t userid)
 {
-
-	set<int>::iterator itera=uid_rongqi.find(userid);    //用户登录成功时需要从容器查找是否有该uid,如果有证明重复登录
+	//用户登录成功时需要从容器查找是否有该uid,如果有证明重复登录
+	set<int>::iterator itera=uid_rongqi.find(userid);    
 	if(itera != uid_rongqi.end())
 		uid_rongqi.erase(itera);
 
@@ -350,37 +336,3 @@ uint64_t MysqlKu::GetUid(const string & zhanghu)
 }
 
 
-/*
-void  MysqlKu::cheshi()
-{
-	int t;
-	string str="select * from "+table[0];
-	t=mysql_query(&mysql,str.c_str());
-	if(t)
-	{
-		printf("Error1 making query:%s\n",mysql_error(&mysql));
-	}
-
-	res = mysql_use_result(&mysql);
-	//获取表中的列数
-	int rows;
-	rows=mysql_num_fields(res);
-	MYSQL_FIELD * my;                     //声明一个接收字段属性的类型
-	my=mysql_fetch_fields(res);          //返回该表的所有字段属性
-	std::cout<<"row="<<rows<<std::endl;
-	for(int i=0;i<rows;i++)
-	{
-		int j=my[i].type;
-		std::cout<<j<<std::endl;
-		std::cout<<my[i].type<<std::endl;
-	}
-}
-
-
-void  MysqlKu::cheshitable()
-{
-	for(int i=0;i<table.size();i++)
-		cout<<table[i]<<endl;
-
-}
-*/

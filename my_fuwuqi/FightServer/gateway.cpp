@@ -34,6 +34,14 @@ if(GAMECLIENT->ConnectGameServer() < 0)
 	return;
 //初始化各个模块的handler
 HANDLERLIST->Init();
+//初始化所有条件变量和锁
+int Error;
+Error = ConditionInit();
+if (Error < 0)
+{
+	std::cout<<"ConditionInit fail !"<<Error<<std::endl;
+	return;
+}
 //启动所有线程（读 写 处理工作 定时器 这四个线程）
 if(pthreadstart() < 0)
  return;

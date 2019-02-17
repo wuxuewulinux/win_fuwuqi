@@ -201,8 +201,8 @@ int GameMysqlHandler::OnQuitReq(const SSMsg& rSSMsg, int iFd)
 		return -1;
 	}
 	std::string sRole(buff);
-	MYSQLKU->ChangeDBRole(sRole,(int)rSSMsg.head().uid());
-	MYSQLKU->PopUid((int)rSSMsg.head().uid());									//从容器中把上线的UID给去除出去
+	MYSQLKU->ChangeDBRole(sRole,rSSMsg.head().uid());
+	MYSQLKU->PopUid(rSSMsg.head().uid());									//从容器中把上线的UID给去除出去
 	return 0;
 }
 
@@ -220,7 +220,7 @@ int GameMysqlHandler::OnUpdateDatabaseReq(const SSMsg& rSSMsg, int iFd)
 		return -1;
 	}
 	std::string sRole(buff);
-	MYSQLKU->ChangeDBRole(sRole,(int)rSSMsg.head().uid());
+	MYSQLKU->ChangeDBRole(sRole,rSSMsg.head().uid());
 	
 	return 0;
 }

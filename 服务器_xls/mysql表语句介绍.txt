@@ -1,0 +1,208 @@
+
+1.创建一个 MsgLoginSuccess 存储过程SQL语句到数据库中
+
+delimiter $$
+create procedure MsgLoginSuccess(IN id int,IN tatus int)
+begin
+update msgServer set Status=tatus where Uid=id;
+select * from msgServer where Uid=id;
+end $$					//输入按回车就创建存储成功了
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+2.创建一个 MsgChangeStatus 存储过程SQL语句到数据库中
+
+
+delimiter $$
+create procedure MsgChangeStatus(IN id int,IN value int,IN type int)
+begin
+if (type = 1)
+then
+update msgServer set Grade=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 2)
+then
+update msgServer set Rank=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 3)
+then
+update msgServer set Status=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 4)
+then
+update msgServer set Vip=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 5)
+then
+update msgServer set Head=value where Uid=id;
+select * from msgServer where Uid=id;
+elseif (type = 6)
+then
+update msgServer set ChatFrame=value where Uid=id;
+select * from msgServer where Uid=id;
+end if;
+end $$				//直接按回车键就可以创建成功了
+
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+
+
+show procedure status;			//查看mysql数据库所有存储过程
+
+drop procedure 存储过程名称;		//删除某个存储过程
+
+call 存储过程名称(传入参数);		//执行mysql存储过程如： call MsgLoginSuccess(1,2);  //1表示id,2表示tatus
+
+
+//创建一个聊天服务器表
+
+create table msgServer(Uid Bigint not null,Name nvarchar(10) not null,Grade int default 0,Rank int default 0,Status int default 0,Vip int default 0,Head int default 0,ChatFrame int default 0,Friend blob);
+
+
+
+聊天服务器数据库需要创建MsgLoginSuccess 存储过程和创建MsgChangeStatus 存储过程和一张 msgServer 表，SQL语句都在上面
+
+
+
+以下是游戏服务器数据库的操作
+
+
+
+				1.创建一个xiangmu数据库：保存用户的基本数据的表
+
+
+创建xiangmu数据库的语句 如下：
+
+create database xiangmu;
+
+
+在xiangmu数据库需要 Server 表 SQL语句：保存用户基本数据的
+
+
+create table Server(Uid int not null AUTO_INCREMENT primary key,zhanghu nvarchar(20) not null,mima nvarchar(20) not null,name nvarchar(10) not null,role blob not null,Diamond int default 0,Gold int default 0);
+
+
+在xiangmu数据库需要 LoginTime 表 SQL语句：该表是用来记录玩家登录时间的，语句如下：
+
+create table LoginTime(Uid int not null,TimeStemp DateTime not null);
+
+
+在xiangmu数据库中需要一个LoginChangeTime存储过程：用来操作登录时间的更改和添加的，语句如下：
+
+delimiter $$
+create procedure LoginChangeTime(IN id int,IN type int)
+begin
+declare logintime DateTime;
+set @logintime=now();
+if (type = 1)
+then
+insert into LoginTime(Uid,TimeStemp) values (id,@logintime);
+elseif (type = 2)
+then
+update LoginTime set TimeStemp=@logintime where Uid=id;
+end if;
+end $$				//直接按回车键就可以创建成功了
+
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+在xiangmu数据库中增加一个ActiveUserData存储过程：从MYSQL取出正在活跃的数据.SQL语句如下：
+
+
+delimiter $$
+create procedure ActiveUserData()
+begin
+declare eventtime DateTime;
+set @eventtime=date_sub(now(),interval 3 day);
+select Uid,name,role from Server where Uid in (select Uid from LoginTime where TimeStemp > @eventtime);
+end $$				//直接按回车键就可以创建成功了
+
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+
+
+			2.创建一个ZhangDan数据库：用来保存所有游戏的流水（消费记录（增加或者减少）和充值记录）
+
+
+
+1.创建一个ZhangDan数据库的语句：
+
+create database ZhangDan;
+
+2.创建钻石消费记录流水表，语句 如下：
+
+create table DiamondBill(Uid int not null,ConsumeId int not null,BeginDiamond int not null,LastDiamond int not null,ConsumeTime DateTime not null);
+
+
+解读字段：
+
+ConsumeId 字段： 表示在哪里消费。对应一张DiamondConsumeId的配置表（表格）。拿到ConsumeId数值去DiamondConsumeId配置表就能找到一串消费的字符串了。就能知道他在哪里消费
+
+BeginDiamond ： 表示之前的钻石数量
+
+LastDiamond ： 表示消费后的钻石数量
+
+ConsumeTime ： 表示那个时间日期正在进行消费
+
+
+
+3.创建一个DiamondBillData存储过程用来操作DiamondBill表插入记录： 用来插入一条消费记录到DiamondBill(钻石消费表)表中的 语句 如下：
+
+delimiter $$
+create procedure DiamondBillData(IN id int,IN type int,IN oldDiamond int,IN newDiamond int)
+begin
+declare eventtime DateTime;
+set @eventtime=now();
+insert into DiamondBill(Uid,ConsumeId,BeginDiamond,LastDiamond,ConsumeTime) values (id,type,oldDiamond,newDiamond,@eventtime);
+end $$					//直接按回车键就可以创建成功了		
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+
+4.创建金币消费记录流水表，语句 如下：
+
+create table GoldBill(Uid int not null,ConsumeId int not null,BeginGold int not null,LastGold int not null,ConsumeTime DateTime not null);
+
+
+解读字段：
+
+ConsumeId 字段： 表示在哪里消费。对应一张GoldConsumeId的配置表（表格）。拿到ConsumeId数值去GoldConsumeId配置表就能找到一串消费的字符串了。就能知道他在哪里消费
+
+BeginGold ： 表示之前的金币数量
+
+LastGold ： 表示消费后的金币数量
+
+ConsumeTime ： 表示那个时间日期正在进行消费
+
+
+
+
+5.创建一个GoldBillData存储过程用来操作GoldBill表插入记录： 用来插入一条消费记录到GoldBill(金币消费表)表中的 语句 如下：
+
+
+delimiter $$
+create procedure GoldBillData(IN id int,IN type int,IN oldGold int,IN newGold int)
+begin
+declare eventtime DateTime;
+set @eventtime=now();
+insert into GoldBill(Uid,ConsumeId,BeginGold,LastGold,ConsumeTime) values (id,type,oldGold,newGold,@eventtime);
+end $$					//直接按回车键就可以创建成功了	
+
+
+delimiter ;				//创建成功还要在输入这个字段
+
+
+
+

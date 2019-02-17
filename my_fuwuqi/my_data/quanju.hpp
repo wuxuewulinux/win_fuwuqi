@@ -12,6 +12,7 @@
 #include "txtlog.hpp"
 #include "timeku.hpp"
 #include "../proto/SSmsg.pb.h"
+#include "ThreadPool.hpp"
 
 
 //判断指针的宏函数
@@ -98,6 +99,10 @@ struct timeduilie       //定时器需要保存的结构体
 	extern txtlog MYLOG;                    //声明一个记录错误日志的全局类。
 
 	extern timeku timelei;                //声明一个时间库类，专门管理所有的定时时间变化
+
+	//线程池结构体
+
+	extern threadpool_t pool_t;			//声明一个线程池结构体
 
 
 #endif

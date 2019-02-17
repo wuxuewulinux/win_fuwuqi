@@ -32,8 +32,7 @@ void * readxiancheng(void *canshu)
 			if(ret == -2)
 			{      
 				std::cout<<"read error message!"<<std::endl;
-				MYLOG.printflog("接收到错误的消息包!");
-
+				MYLOG.printflog("read error message!");
 				//如果数据发生错误，就需要对该IO进行处理
 
 			}

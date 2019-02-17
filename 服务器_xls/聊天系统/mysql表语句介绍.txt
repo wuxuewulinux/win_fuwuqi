@@ -73,7 +73,6 @@ create table msgServer(Uid Bigint not null,Name nvarchar(10) not null,Grade int 
 游戏数据库服务器需要 Server 表 SQL语句：
 
 
-create table Server(Uid int not null AUTO_INCREMENT primary key,zhanghu nvarchar(20) not null,mima nvarchar(20) not null,name nvarchar(10) not null,role blob not null);
-
+create table Server(Uid int not null AUTO_INCREMENT primary key,zhanghu nvarchar(20) not null,mima nvarchar(20) not null,name nvarchar(10) not null,role blob not null,Diamond int default 0,Gold int default 0);
 
 

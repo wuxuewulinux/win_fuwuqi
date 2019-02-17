@@ -75,6 +75,18 @@
     <ClInclude Include="logicconfigmanager.hpp">
       <Filter>config</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadPool.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="condition.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="BillMysql.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="redisData.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="epoll_ku.cpp">
@@ -142,6 +154,18 @@
     </ClCompile>
     <ClCompile Include="serverconfig.cpp">
       <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="condition.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="BillMysql.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="redisData.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

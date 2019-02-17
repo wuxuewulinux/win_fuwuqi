@@ -29,7 +29,7 @@ bool ServerConfig::Init(std::string configname)
 		return false;
 	}
 
-	//读取数据库的所有信息
+	//读取用户数据库的所有信息
 	{
 		TiXmlElement *mysql_element = RootElement->FirstChildElement("mysql");
 		if (NULL == mysql_element)
@@ -84,6 +84,60 @@ bool ServerConfig::Init(std::string configname)
 		}
 	}
 
+	//读取用户流水账单数据库的所有信息
+	{
+		TiXmlElement *bill_mysql_element = RootElement->FirstChildElement("BillMysql");
+		if (NULL == bill_mysql_element)
+		{
+			std::cout<<": no [bill_mysql_element]."<<std::endl;
+			return false;
+		}
+
+		iRet = InitBillMysqlConfigg(bill_mysql_element);
+		if (iRet)
+		{
+			std::cout<<"InitBillMysqlConfigg failed : "<<std::cout<<iRet<<std::endl;;
+
+			return false;
+		}
+	}
+
+	//读取用户流水账单数据库所有的表
+	{
+		TiXmlElement *billmysqltable_element = RootElement->FirstChildElement("bill_mysql_table");
+		if (NULL == billmysqltable_element)
+		{
+			std::cout<<": no [billmysqltable_element]."<<std::endl;
+			return false;
+		}
+
+		iRet = InitBillMysqlTableConfigg(billmysqltable_element);
+		if (iRet)
+		{
+			std::cout<<"InitBillMysqlTableConfigg failed : "<<std::cout<<iRet<<std::endl;;
+
+			return false;
+		}
+	}
+
+	//读取Redis服务器的IP地址和端口号
+	{
+		TiXmlElement *redis_element = RootElement->FirstChildElement("RedisServer");
+		if (NULL == redis_element)
+		{
+			std::cout<<": no [RedisServer]."<<std::endl;
+			return false;
+		}
+
+		iRet = InitRedisServerConfig(redis_element);
+		if (iRet)
+		{
+			std::cout<<"InitRedisServerConfig failed : "<<std::cout<<iRet<<std::endl;;
+
+			return false;
+		}
+	}
+
 	//如果以后该模块增加其他配置信息就在这里进行扩展
 
 	return true;
@@ -118,9 +172,33 @@ int ServerConfig::InitMysqlServerConfigg(TiXmlElement *RootElement)
 
 
 
+int ServerConfig::InitRedisServerConfig(TiXmlElement *RootElement)
+{
+	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
+	while (NULL != dataElement)
+	{
+
+		if (!GetSubNodeValue(dataElement, "ip", mRdisServer.ip) || mRdisServer.ip.empty())
+		{
+			return -1;
+		}
+
+		if (!GetSubNodeValue(dataElement, "port", mRdisServer.port) || mRdisServer.port < 0 )
+		{
+			return -2;
+		}
+
+		dataElement = dataElement->NextSiblingElement();
+
+	}
+
+	return 0;
+}
+
+
 int ServerConfig::InitMysqlConfigg(TiXmlElement *RootElement)
 {
-		//开始关于数据库xml文件节点的数据
+	//开始关于数据库xml文件节点的数据
 
 	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
 	while (NULL != dataElement)
@@ -148,7 +226,32 @@ int ServerConfig::InitMysqlConfigg(TiXmlElement *RootElement)
 }
 	
 
+int ServerConfig::InitBillMysqlConfigg(TiXmlElement *RootElement)
+{
+	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
+	while (NULL != dataElement)
+	{
+		if (!GetSubNodeValue(dataElement, "bill_mysql_user", mBillMysql.user) || mBillMysql.user.empty())
+		{
+			return -1;
+		}
 
+		if (!GetSubNodeValue(dataElement, "bill_mysql_mima", mBillMysql.mima) || mBillMysql.mima.empty() )
+		{
+			return -2;
+		}
+
+		if (!GetSubNodeValue(dataElement, "bill_mysql_database", mBillMysql.database) || mBillMysql.database.empty() )
+		{
+			return -3;
+		}
+
+		dataElement = dataElement->NextSiblingElement();
+
+	}
+
+	return 0;
+}
 
 
 int ServerConfig::InitMysqlTableConfigg(TiXmlElement *RootElement)
@@ -168,6 +271,31 @@ int ServerConfig::InitMysqlTableConfigg(TiXmlElement *RootElement)
 
 		dataElement = dataElement->NextSiblingElement();
 	
+	}
+
+	return 0;
+}
+
+
+int ServerConfig::InitBillMysqlTableConfigg(TiXmlElement *RootElement)
+{
+	TiXmlElement *dataElement = RootElement->FirstChildElement("data");
+	while (NULL != dataElement)
+	{
+		std::string DiamondBillTable;
+		if (!GetSubNodeValue(dataElement, "DiamondBill_table", DiamondBillTable) ||DiamondBillTable.empty())
+		{
+			return -1;
+		}
+		mBillMysql.BillTable.push_back(DiamondBillTable);
+		std::string GoldBillTable;
+		if (!GetSubNodeValue(dataElement, "GoldBill_table", GoldBillTable) ||GoldBillTable.empty())
+		{
+			return -2;
+		}
+		mBillMysql.BillTable.push_back(GoldBillTable);
+		dataElement = dataElement->NextSiblingElement();
+
 	}
 
 	return 0;

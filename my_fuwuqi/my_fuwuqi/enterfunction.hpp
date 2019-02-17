@@ -11,6 +11,8 @@
 
 void gateway();         //启动服务器。
 
+int ConditionInit();	//条件变量和锁初始化.
+
 bool LogInit(std::string path);       //启动所有日志文件
 
 CRoleObj * GetRole(uint64_t Uid);

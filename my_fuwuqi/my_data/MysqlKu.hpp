@@ -30,58 +30,53 @@ public:
 
 	//调用mysql数据库返回该用户游戏名字 
 
-	string GetName(int Uid);
+	string GetName(uint64_t Uid);
 
 	//获取role结构
 
-	string GetDBRole(int Uid);
+	string GetDBRole(uint64_t Uid);
 
 	//修改某个用户的role结构
 
-	void ChangeDBRole(string & rDBRole,int Uid);
+	void ChangeDBRole(string & rDBRole,uint64_t Uid);
+
+	//修改钻石数量
+
+	void ChangeDiamond(int Diamond ,uint64_t Uid);
+
+	//修改金币数量
+
+	void ChangeGole(int Gold ,uint64_t Uid);
+
+	//改变用户的登录时间，Type分为两种状态，传入1或者2：注册成功时就要调用该函数然后type传入1.登录成功就调用该函数type传入2
+
+	void ChangeLoginTime(uint64_t Uid,int Type);
 
 	//判断客户端注册情况：函数返回1表示账户存在，返回2表示名字存在，返回3表示注册成功.然后保存到mysql数据库
 
 	int Register(const string & zhanghu,const string & mingzi);
 
-	//调用mysql数据库返回该用户游戏积分
-
-	//int GetJiFen(const string & zhanghu);
-
 	//插入注册成功的游戏客户到mysql中
 
 	void InsertAccount(const string & zhanghu,const string & mingzi,const string & mima,const string & DBRole);
 
-	//修改mysql数据库中的游戏用户积分
-
-	//void ChangeJiFen(int jifen,const string & zhanghu);
-
-	//插入金币日志记录到数据库中
-
-	//void InsertGoldLog(const struct goldlog & gold_log); 
-
+	
 	//插入一个用户uid到uid容器中
 
-	void InsertUid(int userid){uid_rongqi.insert(userid);}
+	void InsertUid(uint64_t userid){uid_rongqi.insert(userid);}
 
 	//在uid容器查找是否存在该用户uid，为了判断是否重复登录
 
-	bool FindUid(int userid);
+	bool FindUid(uint64_t userid);
 
 	//从uid容器中删除一个用户uid
 
-	void PopUid(int userid);
+	void PopUid(uint64_t userid);
 
 	//获取用户uid
 
 	uint64_t GetUid(const string & zhanghu);
 
-
-	//获取字段的属性测试
-
-	//void cheshi();
-
-	//void cheshitable(); 
 
 	~MysqlKu(){mysql_close(&mysql);}
 
